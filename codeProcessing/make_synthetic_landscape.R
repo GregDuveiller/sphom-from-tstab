@@ -60,9 +60,7 @@ for(i in 1:length(angle.vctr)){
   }
 
 
-require(parallel)
-
-purityMaps <- list()
+list_purityMaps <- list()
 # make the purity maps... 
 for(i in 1:length(list_PSF)){
   # load(paste0(wpath,'dataMid/SynTest/',paste('PSF','.AQUA.angleNum.',which(ang==scanangle),'.RData',sep='')))
@@ -77,45 +75,46 @@ for(i in 1:length(list_PSF)){
 
 # The prescribed NDVI curves...
 t <- 1:250
-glogf <- function(t,A,K,Q,B,M,v){z=A+(K-A)/(1+Q*exp(-B*(t-M)))^(1/v)}
+glogf <- function(t,A, K, Q, B, M, v){z=A+(K-A)/(1+Q*exp(-B*(t-M)))^(1/v)}
 
 # DBF 
-gro=glogf(t,A=0.25,K=0.9,B=0.04,Q=1,v=1,M=40)
-sen=glogf(t,A=0,K=0.1,B=0.01,Q=1,v=1,M=180)
+gro <- glogf(t, A=0.25, K=0.9, B=0.04, Q=1, v=1, M=40)
+sen <- glogf(t, A=0, K=0.1, B=0.01, Q=1, v=1, M=180)
 NDVI.DBF <- gro-sen
 
 # WCR 
-gro=glogf(t,A=0.20,K=0.9,B=0.04,Q=1,v=1,M=70)
-sen=glogf(t,A=0,K=0.6,B=0.07,Q=1,v=1,M=180)
+gro <- glogf(t, A=0.20, K=0.9, B=0.04, Q=1, v=1, M=70)
+sen <- glogf(t, A=0, K=0.6, B=0.07, Q=1, v=1, M=180)
 NDVI.WCR <- gro-sen
 
 # SCR 
-gro=glogf(t,A=0.20,K=0.9,B=0.05,Q=1,v=1,M=140)
-sen=glogf(t,A=0,K=0.6,B=0.06,Q=1,v=1,M=230)
+gro <- glogf(t, A=0.20, K=0.9, B=0.05, Q=1, v=1, M=140)
+sen <- glogf(t, A=0, K=0.6, B=0.06, Q=1, v=1, M=230)
 NDVI.SCR <- gro-sen
 
 # GRA 
-gro=glogf(t,A=0.20,K=0.7,B=0.03,Q=1,v=1,M=100)
-sen=glogf(t,A=0,K=0.2,B=0.04,Q=1,v=1,M=230)
+gro <- glogf(t, A=0.20, K=0.7, B=0.03, Q=1, v=1, M=100)
+sen <- glogf(t, A=0, K=0.2, B=0.04, Q=1, v=1, M=230)
 NDVI.GRA <- gro-sen
 
 
-plot(t,NDVI.DBF,type='l',col='darkgreen', ylim=c(0,1))
-lines(t,NDVI.WCR,col='wheat3')
-lines(t,NDVI.SCR,col='cornflowerblue')
-lines(t,NDVI.GRA,col='red')
+plot(t, NDVI.DBF, type='l', col='darkgreen', ylim=c(0,1))
+lines(t, NDVI.WCR, col='wheat3')
+lines(t, NDVI.SCR, col='cornflowerblue')
+lines(t, NDVI.GRA, col='red')
 
 
 ### generate block of time series...
-fname="SynTest"
+fname <- "SynTest"
 
 # make grid of modis L2G
-dum <- seq(500,tnx-500,231.56)  # we avoid border effects...
-grd <- data.frame(y=rep(dum,times=length(dum)),x=rep(dum,each=length(dum)))
+tnx <- dim(r)[1] * 10 # need to check these scales... 
+dum <- seq(500, tnx-500, 231.56)/100 # we avoid border effects...
+grd <- data.frame(y=rep(dum, times=length(dum)), x=rep(dum, each=length(dum)))
 # 
 
 
-fpath=paste0(wpath,'dataMid/SynTest/')
+fpath=paste0(wpath, 'dataMid/SynTest/')
 ndvi.noise=0.025
 
 # should set.seed
