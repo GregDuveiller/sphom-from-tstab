@@ -7,16 +7,18 @@ require(secr)
 
 ncores = 4
 
-
+spres <- 100  # spatial resolution of the initial pixels
+npixi <- 160  # number of original pixels: we suppose they are 'spres' m each
+npixo <- 800  # numscale factor to make it to rasters of workable size
 # prepare input mesh 
-tempmask <- make.mask(nx = 100, ny = 100, spacing = 1, buffer = 0)
+tempmask <- make.mask(nx = npix, ny = npix, spacing = 1, buffer = 0)
 # generate landscape
 set.seed(42)
 r <- raster(randomHabitat(tempmask, p = 0.5, A = 0.5, minpatch = 15))
 # convert from 1-NA to binary 
 r <- !is.na(r) 
 # artificially aggregate resolution
-r <- disaggregate(r, fact = 10)
+r <- disaggregate(r, fact = npixo/npixi)
 
 
 # get idea of how angle are distributed in MODIS
@@ -38,8 +40,7 @@ if(calc.ang){
 }
 
 
-# script to make purity maps
-
+# script to get the PSF model needed to generate purity maps
 source('codeProcessing/ModisPsfModel.r')
 
 Pnum <- -1
@@ -48,8 +49,8 @@ lat <- 48
 # make the PSF models for all angles/
 list_PSF <- list()
 for(i in 1:length(angle.vctr)){
-  dum.psf <- ModisPsfModel(v0 = 231.65, 
-                          delta = 10, # <- beware of this one... 
+  dum.psf <- ModisPsfModel(v0 = 231.65,  # spatial resolution of Modis grid in m
+                          delta = spres/(npixo/npixi), # <- beware of this ... 
                           Lat = lat, ScanAngle = angle.vctr[i], PlatformPass = Pnum, 
                           optsigma = 30)
   dum.psf <- round(dum.psf, digits = 6)
@@ -108,13 +109,20 @@ lines(t, NDVI.GRA, col='red')
 fname <- "SynTest"
 
 # make grid of modis L2G
-tnx <- dim(r)[1] * 10 # need to check these scales... 
-dum <- seq(500, tnx-500, 231.56)/100 # we avoid border effects...
-grd <- data.frame(y=rep(dum, times=length(dum)), x=rep(dum, each=length(dum)))
-# 
+buf <- 500 # buffer to avoid border effects...
+dum <- seq(buf, (npixi * spres) - buf, 231.56)/spres 
+grd <- data.frame(y = rep(dum, times = length(dum)), 
+                  x = rep(dum, each = length(dum)))
 
+# sanity check plot
+plot(r)
+plot(list_purityMaps[[1]])
+points(grd, pch = 3)
 
-fpath=paste0(wpath, 'dataMid/SynTest/')
+###### WORK IN PROGRESS !!! ######
+###### construction stopped ######
+
+fpath <- paste0(wpath, 'dataMid/SynTest/')
 ndvi.noise=0.025
 
 # should set.seed
