@@ -79,6 +79,8 @@ for(i in 1:length(list_PSF)){
   list_purityMaps[[i]] <- out.int
 }
 
+purity_stack <- brick(list_purityMaps)
+names(purity_stack) <- paste('angle', angle.vctr, sep = '_')
 
 ### Define the prescribed NDVI curves... ----
 
@@ -133,6 +135,9 @@ grd <- data.frame(y = rep(dum, times = length(dum)),
 plot(r)
 plot(list_purityMaps[[1]])
 points(grd, pch = 3)
+
+
+
 
 # set some NDVI noise to make things more realistic
 ndvi.noise <- 0.01 #  Not sure still if we need it
@@ -227,11 +232,24 @@ ggplot(df.sum) +
   
 
 ggplot(df.sum %>% filter(pur_avg > 0.5)) +
-  geom_point(aes(x = pur_avg/pur_std, y = var_sig/var_tot), shape = 3) +
+  geom_point(aes(x = pur_avg/pur_std, y = var_sig/var_tot,
+                 colour = original_id),
+             shape = 3) +
+  scale_x_log10() +
+  scale_colour_continuous(guide = 'none')
+
+ggplot(df.sum %>% filter(pur_avg > 0.5)) +
+  geom_point(aes(x = pur_avg/pur_std, y = var_sig/var_res,
+             colour = original_id),
+             shape = 3) +
   scale_x_log10()
 
-
-
+ggplot(df.sum %>% filter(pur_avg > 0.5)) +
+  geom_point(aes(x = pur_avg, y = var_sig,
+             colour = original_id),
+             shape = 3) +
+  scale_x_log10() +
+  scale_colour_continuous(guide = 'none')
 
 ###### WORK IN PROGRESS !!! ######
 ###### construction stopped ######
