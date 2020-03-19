@@ -1,7 +1,9 @@
 ---
 title: "Exploring spatial homogeneity from temporal stability"
 author: "Greg Duveiller"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook describing the steps towards expanding the concept of **temporal signal-to-noise** ratio applied to MODIS NDVI daily time series described in [Duveiller et al. 2015](https://doi.org/10.1016/j.rse.2015.06.001). The idea is to extract a proxy for *spatial homogeneity* based on the *temporal stability* of the signal. The rational is that due to the large multi-angular resolution at which MODIS collects information, the spatial footprint of each observation varies from one day to the next. If it is stable, we can infer that the underlying surface is relatively homogeneous. 
@@ -17,6 +19,7 @@ library(raster)
 load("~/Work/Workspace/spHomogeneity/dataProcessing/temp_workspace.RData")
 col.1 <- '#1770DC'
 col.2 <- '#DCA416'
+col.3 <- 'grey20'
 ```
 
 
@@ -54,10 +57,10 @@ We fit a spline to the remaining observations to estimate what the actual signal
 
 For every time series, we also have:
 
-- pur_avg : the mean purity value
-- pur_std : the standard deviation of the purity
+- pur_avg : the mean purity value over the time series
+- pur_std : the standard deviation of the purity values 
 
-
+Below we see how theses vary
 
 ```{r}
 df.sum.long <- df.sum %>% 
@@ -65,46 +68,45 @@ df.sum.long <- df.sum %>%
   pivot_longer(cols = c('var_res','var_sig','var_tot'), 
                         names_to = 'var_type', values_to = 'value_var')
 
-ggplot(df.sum.long %>% 
-         filter(pur_avg > 0.5)) +
-  geom_point(aes(x = pur_avg, y = value_var,
-                 colour = factor(original_id)),
-             shape = 3) +
+ggplot(df.sum.long %>% filter(pur_avg > 0.5),
+       aes(x = pur_avg, y = value_var)) +
+  geom_point(aes(colour = factor(original_id)), shape = 3) +
+  geom_smooth(colour = col.3) + 
   facet_grid(var_type ~ ., scales = 'free_y') +
-  scale_x_log10() +
+  #scale_x_log10() +
   scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
 ```
 
 
 ```{r}
-ggplot(df.sum.long %>% 
-         filter(pur_avg > 0.5)) +
-  geom_point(aes(x = pur_std, y = value_var,
-                 colour = factor(original_id)),
-             shape = 3) +
+ggplot(df.sum.long %>% filter(pur_avg > 0.5),
+       aes(x = pur_std, y = value_var)) +
+  geom_point(aes(colour = factor(original_id)), shape = 3) +
+  geom_smooth(colour = col.3) + 
   facet_grid(var_type ~ ., scales = 'free_y') +
-  scale_x_log10() +
+  #scale_x_log10() +
   scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
 ```
 
 ## Signal to Total ratio
 
 ```{r}
-ggplot(df.sum %>% filter(pur_avg > 0.5)) +
-  geom_point(aes(x = pur_avg, y = var_sig/var_tot,
-                 colour = factor(original_id)),
-             shape = 3) +
-  scale_x_log10() +
+ggplot(df.sum %>% filter(pur_avg > 0.5),
+       aes(x = pur_avg, y = var_sig/var_tot)) +
+  geom_point(aes(colour = factor(original_id)), shape = 3) +
+  geom_smooth(colour = col.3) +
+  #scale_x_log10() +
   scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
 
 ```
 
 ```{r}
-ggplot(df.sum %>% filter(pur_avg > 0.5)) +
-  geom_point(aes(x = pur_std, y = var_sig/var_tot,
-                 colour = factor(original_id)),
-             shape = 3) +
-  scale_x_log10() +
+ggplot(df.sum %>% filter(pur_avg > 0.5),
+       aes(x = pur_std, y = var_sig/var_tot)) +
+  geom_point(aes(colour = factor(original_id)), shape = 3) +
+  geom_smooth(colour = col.3) +
+  #geom_smooth(colour = 'red', formula = y ~ poly(x,2)) +
+  #scale_x_log10() +
   scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
 
 ```
@@ -114,32 +116,32 @@ ggplot(df.sum %>% filter(pur_avg > 0.5)) +
   geom_point(aes(x = pur_avg/pur_std, y = var_sig/var_tot,
                  colour = factor(original_id)),
              shape = 3) +
-  scale_x_log10() +
+  scale_x_log10('log(pur_avg/pur_std)') +
   scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
 ```
 
 ## Signal to Noise ratio
 
 ```{r}
-ggplot(df.sum %>% filter(pur_avg > 0.5)) +
-  geom_point(aes(x = pur_avg, y = var_sig/var_res,
-                 colour = factor(original_id)),
-             shape = 3) +
-  scale_x_log10() +
+ggplot(df.sum %>% filter(pur_avg > 0.5),
+       aes(x = pur_avg, y = var_sig/var_res)) +
+  geom_point(aes(colour = factor(original_id)), shape = 3) +
+  geom_smooth(colour = col.3) +
+  # scale_x_log10() +
   scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
 
 ```
 
 ```{r}
-ggplot(df.sum %>% filter(pur_avg > 0.5)) +
-  geom_point(aes(x = pur_std, y = var_sig/var_res,
-                 colour = factor(original_id)),
-             shape = 3) +
+ggplot(df.sum %>% filter(pur_avg > 0.5),
+       aes(x = pur_std, y = var_sig/var_res)) +
+  geom_point(aes(colour = factor(original_id)), shape = 3) +
+  geom_smooth(colour = col.3) +
   scale_x_log10() +
   scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
 
 ```
-
+  
 
 
 ```{r}
@@ -147,7 +149,20 @@ ggplot(df.sum %>% filter(pur_avg > 0.5)) +
   geom_point(aes(x = pur_avg/pur_std, y = var_sig/var_res,
                  colour = factor(original_id)),
              shape = 3) +
-  scale_x_log10() +
+    scale_x_log10() +
+  scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
+
+```
+
+
+
+```{r}
+ggplot(df.sum %>% filter(pur_avg > 0.5)) +
+  geom_point(aes(x = pur_std, y = var_res,
+                 colour = factor(original_id)),
+             shape = 3) +
+  geom_smooth(aes(x = pur_std, y = var_res), method = 'lm', 
+              formula = y ~ poly(x, 2), color = 'grey20') +
   scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
 
 ```

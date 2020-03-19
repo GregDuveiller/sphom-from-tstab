@@ -10,6 +10,7 @@
 
 library(here)
 dir.create(path = 'dataProcessing', showWarnings = F, recursive = T)
+dir.create(path = 'textNotebooks', showWarnings = F, recursive = T)
 
 # Generate landscape
 source('codeProcessing/make_synthetic_landscape.R')

@@ -1,4 +1,4 @@
-ModisPsfModel = function(v0, delta, Lat, ScanAngle, PlatformPass, optsigma){
+MODIS_PSF_simulator = function(v0, delta, Lat, ScanAngle, Platform, optsigma){
 # % Function to create a model of the MODIS spatial response for a given
 # % latitude and view zenith angle
 # % 
@@ -10,8 +10,8 @@ ModisPsfModel = function(v0, delta, Lat, ScanAngle, PlatformPass, optsigma){
 # %   * ScanAngle = Scan Angle of the satellite in decimal degrees... 
 # %             ! it is different from View zenith angle which can be larger due 
 # %             to curvature of the Earth
-# %   * PlatformPass = needs to be set to 1 for a descending pass
-# %             (MODIS Terra) and -1 for ascending pass (MODIS Aqua)
+# %   * Platform = either 'TERRA' for the descending pass or 'AQUA' for the 
+# %             ascending pass
 # %   * optsigma = sigma of the gaussian effect of the PSF in meters
 # %
 # % 
@@ -40,7 +40,7 @@ require(akima)
 #   ScanAngle=45
 #   delta=10
 #   Lat=40.8
-#   PlatformPass=1
+#   Platform='TERRA'
 #   optsigma=10
 
 
@@ -51,7 +51,7 @@ hSat = 705000; # height of the satelite above Earth's surface
 R = 6378100; # Radius of the Earth (assumed to be spherical)
 
 ## define function for internal calc
-calcCE=function(ScanAngle, dScanAngle, v0, hsat, R){
+calcCE <- function(ScanAngle, dScanAngle, v0, hsat, R){
   
   # % dScanAngle = -0.5.*FOVscan for beginning of obs
   # % dScanAngle = 0 for centre of obs
@@ -106,13 +106,17 @@ cTrack  <- c(CE, -CE, -IO, -KH, KH, IO)
 
 ## Rotate footprint boundaries according to Lat
 
+# set if ascending or descending orbit...
+platform.direction <- ifelse(Platform == 'AQUA', -1, 1) 
+# note above... we assume that if not specifed, it is descending
+
 # Need to find the trackangle 
 A = cos(Incl*pi/180) - (1/Freq)*(cos(Lat*pi/180))^2
 B = sqrt((cos(Lat*pi/180))^2 - (cos(Incl*pi/180))^2)
-trackangle = PlatformPass * atan((A/B))*180/pi
+trackangle = platform.direction * atan((A/B))*180/pi
 
 # For AQUA we need to inverse sign because it is ascending instead of
-# descening! that is why 'platform' has to be set to -1
+# descening! that is why 'platform.direction' has to be set to -1
 
 # Calculate rotation matrix
 RotM <- matrix(c(cos(trackangle*pi/180), -sin(trackangle*pi/180), 

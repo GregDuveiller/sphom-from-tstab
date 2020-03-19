@@ -6,8 +6,6 @@ require(parallel)
 require(raster)
 require(secr)
 
-ncores = 4
-
 
 ### generate a random spatial (binary) landscape ----
 

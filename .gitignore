@@ -2,7 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+.DS_Store
 \dataProcessing
 \dataResults
 \dataFigures
 \textFigures
+\textNotebooks
