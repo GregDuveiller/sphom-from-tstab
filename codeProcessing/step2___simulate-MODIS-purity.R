@@ -1,4 +1,4 @@
-# simulate_MODIS_purity.R
+# step2___simulate-MODIS-purity.R
 #
 # Step 2 in spHomogeneity simulation: simulating how the MODIS instruments
 # samples the synthetic landscape. This involves modelling the MODIS spatial
@@ -15,7 +15,7 @@ landscape_ID <- 'landscape-2LC-id42'
 r <- raster(paste0('dataProcessing/', landscape_ID, '___map'))
 
 # defining the spatial resolution of the initial pixels in meters
-spres <- 50 
+spres <- 100 
 # definition of the scale at which the MODIS PSF will be implemented
 MODsc <- spres * res(r)[1]
 

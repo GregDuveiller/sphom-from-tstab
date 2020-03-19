@@ -1,16 +1,33 @@
-# simulate_temporal_behaviour.R
+# step4___generate-synthetic-datablock.R
 #
 # Step 4 in spHomogeneity simulation: assigning phenology and convolving 
 
+require(raster)
+require(dplyr)
 
 # params that are needed...
 landscape_ID <- 'landscape-2LC-id42'
 psf_fname <- 'PSF-AQUA-48-10'
-spres <- 50 
+LC1 <- 'TS1'
+LC0 <- 'TS2'
+
+# set some NDVI noise to make things more realistic
+ndvi_noise <- 0.05 #  Not sure still if we need it
+
+
+# load PSF
+load(paste0('dataProcessing/', psf_fname, '.Rda')) # list_PSF
 
 # load purity raster
 purity_stack <- brick(x = paste0('dataProcessing/', landscape_ID, 
                                  '___purity-', psf_fname))
+# load original raster
+r <- raster(x = paste0('dataProcessing/', landscape_ID, '___map'))
+
+# get spatial reso of original pixels
+spres <- as.numeric(strsplit(psf_fname, split = '-')[[1]][4])/res(r)[1]
+
+# get spatial extent
 npixi <- dim(purity_stack)[1]*res(purity_stack)[1]
 
 # make modis L2G grid 
@@ -20,23 +37,14 @@ grd <- data.frame(y = rep(dum, times = length(dum)),
                   x = rep(dum, each = length(dum)))
 
 # sanity check plot
-plot(raster(x = paste0('dataProcessing/', landscape_ID, '___map')))
-plot(list_purityMaps[[1]])
+plot(r)
+plot(purity_stack[[1]])
 points(grd, pch = 3)
 
 
-# Define the prescribed NDVI curves... ----
-
-doi_vctr <- 1:365
-glogf <- function(doi_vctr, A, K, Q, B, M, v){
-  z <- A + (K-A)/(1 + Q*exp(-B*(doi_vctr - M)))^(1/v)}
-
-
-
-
-
-# set some NDVI noise to make things more realistic
-ndvi.noise <- 0.01 #  Not sure still if we need it
+# load prescribed NDVI curves
+load('dataProcessing/df-ideal-ts.Rda')  # 'df.ideal.ts'
+doi_vctr <- df.ideal.ts$DOI
 
 # function to calc and gather data at a given time step
 conv.NDVI <- function(ti, LC1, LC0, grd){
@@ -48,11 +56,11 @@ conv.NDVI <- function(ti, LC1, LC0, grd){
   
   # assign new NDVI values to the pixels adding some slight NDVI noise
   ri <- r
-  ri[which(id1)] <- LC1[ti] + rnorm(n = sum(id1), mean = 0, sd = ndvi.noise)
-  ri[which(id0)] <- LC0[ti] + rnorm(n = sum(id0), mean = 0, sd = ndvi.noise)
+  ri[which(id1)] <- LC1[ti] + rnorm(n = sum(id1), mean = 0, sd = ndvi_noise)
+  ri[which(id0)] <- LC0[ti] + rnorm(n = sum(id0), mean = 0, sd = ndvi_noise)
   
   # get angle for this days orbit
-  angi <- ((ti-1) %% 16)+1
+  angi <- ((ti - 1) %% 16) + 1
   
   # apply convolution
   conv <- focal(ri, list_PSF[[angi]], pad = T, padValue = LC0[ti])
@@ -68,7 +76,7 @@ conv.NDVI <- function(ti, LC1, LC0, grd){
                        grdi,   # perturbed grid coordinates  
                        DOI = ti,     # nominal day in the time series
                        NDVI = raster::extract(conv, grdi), # convolved NDVI
-                       Purity = raster::extract(list_purityMaps[[angi]], grdi)) 
+                       Purity = raster::extract(purity_stack[[angi]], grdi)) 
   toc <- Sys.time() - tic
   print(paste('Just finished with t =',ti, 'using this number of seconds', toc))
   return(df.out)
@@ -76,17 +84,32 @@ conv.NDVI <- function(ti, LC1, LC0, grd){
 
 # apply function
 list_temp <- NULL
+eval(expr = parse(text = paste0('dumTS1 <- df.ideal.ts$', LC1)))
+eval(expr = parse(text = paste0('dumTS2 <- df.ideal.ts$', LC0)))
 for(iT in doi_vctr){
-  list_temp[[iT]] <- conv.NDVI(iT, DBF, GRA, grd)
+  list_temp[[iT]] <- conv.NDVI(iT, dumTS1, dumTS2, grd)
   df.all <- do.call('rbind', list_temp)
-  df.all$LC1 <- 'DBF'
-  df.all$LC0 <- 'GRA'
+  df.all$LC1 <- LC1
+  df.all$LC0 <- LC0
 }
 
+
+# df.sum <- df.all %>% 
+#   bind_cols(grd) %>%
+#   mutate(original_id = raster::extract(x = r, y = grd))
+
+save(list = c('df.all','grd'), file = paste0('dataProcessing/', landscape_ID, 
+                             '___datablock-', LC1, '-', LC0, '-', ndvi_noise, 
+                             '___', psf_fname, '.Rda'))
+
+
 # quick and dirty plot
-ggplot(df.all %>% filter(grd_id %in% sample(dim(grd)[1], size = 3),
+require(ggplot2)
+doi_vctr_sub <- sort(sample(doi_vctr, length(doi_vctr)/4, replace = F))
+ggplot(df.all %>% filter(grd_id %in% sample(dim(grd)[1], size = 5),
                          DOI %in% doi_vctr_sub)) + 
-  geom_point(aes(x = DOI, y = NDVI, size = Purity, colour = factor(grd_id))) +
-  geom_line(data = df.ideal.ts, aes(x = DOI, y = GRA), colour = 'black') +
-  geom_line(data = df.ideal.ts, aes(x = DOI, y = DBF), colour = 'black')
+  geom_point(aes(x = DOI, y = NDVI, colour = Purity, shape = factor(grd_id))) +
+  geom_line(data = df.ideal.ts, aes(x = DOI, y = TS1), colour = 'cornflowerblue') +
+  geom_line(data = df.ideal.ts, aes(x = DOI, y = TS2), colour = 'grey10') +
+  scale_colour_continuous('Purity of TS1', limits = c(0,1))
 

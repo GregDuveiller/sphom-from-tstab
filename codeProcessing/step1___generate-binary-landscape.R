@@ -1,4 +1,4 @@
-# generate_binary_landscape.R
+# step1___generate-binary-landscape.R
 #
 # Step 1 in spHomogeneity simulation: generating a random binary landscape that 
 # will serve as a basis for the analysis
