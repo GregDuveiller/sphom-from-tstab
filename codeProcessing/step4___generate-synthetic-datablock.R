@@ -9,10 +9,10 @@ require(dplyr)
 landscape_ID <- 'landscape-2LC-id42'
 psf_fname <- 'PSF-AQUA-48-10'
 LC1 <- 'TS1'
-LC0 <- 'TS2'
+LC0 <- 'TS7'
 
 # set some NDVI noise to make things more realistic
-ndvi_noise <- 0.05 #  Not sure still if we need it
+ndvi_noise <- 0.01 #  Not sure still if we need it
 
 
 # load PSF
@@ -36,11 +36,11 @@ dum <- seq(buf, (npixi * spres) - buf, 231.56)/spres
 grd <- data.frame(y = rep(dum, times = length(dum)), 
                   x = rep(dum, each = length(dum)))
 
-# sanity check plot
-plot(r)
-plot(purity_stack[[1]])
-points(grd, pch = 3)
-
+# # sanity check plot
+# plot(r)
+# plot(purity_stack[[1]])
+# points(grd, pch = 3)
+ 
 
 # load prescribed NDVI curves
 load('dataProcessing/df-ideal-ts.Rda')  # 'df.ideal.ts'

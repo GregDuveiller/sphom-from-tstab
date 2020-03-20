@@ -8,10 +8,10 @@ require(tidyr)
 require(purrr)
 
 landscape_ID <- 'landscape-2LC-id42'
-psf_fname <- 'PSF-AQUA-48-20'
+psf_fname <- 'PSF-AQUA-48-10'
 ndvi_noise <- 0.01
 LC1 <- 'TS1'
-LC0 <- 'TS2'
+LC0 <- 'TS6'
 
 # load target dataset
 load(paste0('dataProcessing/', landscape_ID,
