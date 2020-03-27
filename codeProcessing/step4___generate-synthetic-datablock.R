@@ -1,3 +1,4 @@
+gen_syn_datablock = function(landscape_ID, psf_fname, LC1, LC0, ndvi_noise){
 # step4___generate-synthetic-datablock.R
 #
 # Step 4 in spHomogeneity simulation: assigning phenology and convolving 
@@ -5,14 +6,14 @@
 require(raster)
 require(dplyr)
 
-# params that are needed...
-landscape_ID <- 'landscape-2LC-id42'
-psf_fname <- 'PSF-AQUA-48-10'
-LC1 <- 'TS1'
-LC0 <- 'TS7'
-
-# set some NDVI noise to make things more realistic
-ndvi_noise <- 0.01 #  Not sure still if we need it
+# # params that are needed...
+# landscape_ID <- 'landscape-2LC-id42'
+# psf_fname <- 'PSF-AQUA-48-10'
+# LC1 <- 'TS1'
+# LC0 <- 'TS7'
+# 
+# # set some NDVI noise to make things more realistic
+# ndvi_noise <- 0.01 #  Not sure still if we need it
 
 
 # load PSF
@@ -34,7 +35,7 @@ npixi <- dim(purity_stack)[1]*res(purity_stack)[1]
 buf <- 500 # buffer to avoid border effects...
 dum <- seq(buf, (npixi * spres) - buf, 231.56)/spres 
 grd <- data.frame(y = rep(dum, times = length(dum)), 
-                  x = rep(dum, each = length(dum)))
+                  x = rep(dum, each = length(dum))) # x & y should be flipped
 
 # # sanity check plot
 # plot(r)
@@ -103,13 +104,15 @@ save(list = c('df.all','grd'), file = paste0('dataProcessing/', landscape_ID,
                              '___', psf_fname, '.Rda'))
 
 
-# quick and dirty plot
-require(ggplot2)
-doi_vctr_sub <- sort(sample(doi_vctr, length(doi_vctr)/4, replace = F))
-ggplot(df.all %>% filter(grd_id %in% sample(dim(grd)[1], size = 5),
-                         DOI %in% doi_vctr_sub)) + 
-  geom_point(aes(x = DOI, y = NDVI, colour = Purity, shape = factor(grd_id))) +
-  geom_line(data = df.ideal.ts, aes(x = DOI, y = TS1), colour = 'cornflowerblue') +
-  geom_line(data = df.ideal.ts, aes(x = DOI, y = TS2), colour = 'grey10') +
-  scale_colour_continuous('Purity of TS1', limits = c(0,1))
+}
+
+# # quick and dirty plot
+# require(ggplot2)
+# doi_vctr_sub <- sort(sample(doi_vctr, length(doi_vctr)/4, replace = F))
+# ggplot(df.all %>% filter(grd_id %in% sample(dim(grd)[1], size = 5),
+#                          DOI %in% doi_vctr_sub)) + 
+#   geom_point(aes(x = DOI, y = NDVI, colour = Purity, shape = factor(grd_id))) +
+#   geom_line(data = df.ideal.ts, aes(x = DOI, y = TS1), colour = 'cornflowerblue') +
+#   geom_line(data = df.ideal.ts, aes(x = DOI, y = TS2), colour = 'grey10') +
+#   scale_colour_continuous('Purity of TS1', limits = c(0,1))
 

@@ -38,6 +38,12 @@ TS6 <- glogf(doi_vctr, A = 0, K = 0.5, B = 0.1, Q = 1, v = 1, M = 80) -
 TS7 <- glogf(doi_vctr, A = 0, K = 0.7, B = 0.05, Q = 1, v = 1, M = 120) -
   glogf(doi_vctr, A = 0, K = 0.7, B = 0.025, Q = 1, v = 1, M = 300)
 
+TS8 <- TS4 + 0.2
+
+TS9 <- glogf(doi_vctr, A = 0, K = 0.9, B = 0.1, Q = 1, v = 1, M = 200) -
+  glogf(doi_vctr, A = 0, K = 0.9, B = 0.05, Q = 1, v = 1, M = 380)
+
+
 # 
 plot(TS1, type = 'l', ylim = c(0,1))
 lines(TS2, col = 'red')
@@ -46,9 +52,11 @@ lines(TS4, col = 'darkgreen')
 lines(TS5, col = 'grey50')
 lines(TS6, col = 'grey30')
 lines(TS7, col = 'orange')
+lines(TS8, col = 'green')
+lines(TS9, col = 'wheat')
 
 # 
 
-df.ideal.ts <- data.frame(DOI = doi_vctr, TS1, TS2, TS3, TS4, TS5, TS6, TS7)
+df.ideal.ts <- data.frame(DOI = doi_vctr, TS1, TS2, TS3, TS4, TS5, TS6, TS7, TS8, TS9)
 save('df.ideal.ts', file = 'dataProcessing/df-ideal-ts.Rda')
 
