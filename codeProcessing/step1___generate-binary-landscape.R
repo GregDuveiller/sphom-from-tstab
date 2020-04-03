@@ -16,7 +16,7 @@ npixi <- 160  # number of original pixels: we suppose they are 'spres' m each
 npixo <- 800  # numscale factor to make it to rasters of workable size
 
 # prepare input mesh 
-tempmask <- make.mask(nx = npix, ny = npix, spacing = 1, buffer = 0)
+tempmask <- make.mask(nx = npixi, ny = npixi, spacing = 1, buffer = 0)
 
 # generate landscape
 set.seed(landscape_seed)
@@ -27,7 +27,11 @@ r0 <- !is.na(r0)
 
 # artificially aggregate resolution
 r <- disaggregate(r0, fact = npixo/npixi, overwrite = TRUE,
-                  filename = paste0('dataProcessing/', 
-                                    landscape_ID,'___map.grd'))
+                  filename = paste0('dataProcessing/', batch_name, '/map.grd'))
 
-
+# mk quick plot
+col.1 <- '#1770DC'; col.2 <- '#DCA416'
+png(filename = paste0('dataProcessing/', batch_name, '/map_quickplot.png'), 
+    width = 6, height = 6, units = "in", res = 150)
+plot(r, legend = FALSE, col = c(col.2, col.1))
+dev.off()

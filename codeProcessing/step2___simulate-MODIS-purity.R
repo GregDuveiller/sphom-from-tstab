@@ -9,10 +9,9 @@ require(pracma)
 require(spatstat)
 require(akima)
 
-landscape_ID <- 'landscape-2LC-id42'
 
 # load raster dataset
-r <- raster(paste0('dataProcessing/', landscape_ID, '___map'))
+r <- raster(paste0('dataProcessing/', batch_name,'/map'))
 
 # defining the spatial resolution of the initial pixels in meters
 spres <- 100 
@@ -66,7 +65,8 @@ for(i in 1:length(angle.vctr)){
 }
 
 psf_fname <- paste('PSF', platform, lat, MODsc, sep = '-')
-save('list_PSF', file = paste0('dataProcessing/', psf_fname, '.Rda'))
+save('list_PSF',  
+     file = paste0('dataProcessing/', batch_name, '/', psf_fname, '.Rda'))
 
 list_purityMaps <- list()
 # make the purity maps... 
@@ -79,7 +79,7 @@ for(i in 1:length(list_PSF)){
 purity_stack <- brick(list_purityMaps)
 names(purity_stack) <- paste('angle', angle.vctr, sep = '_')
 
-brick_fname <- paste0(landscape_ID,'___purity-', psf_fname)
+brick_fname <- paste0('purity-', psf_fname)
 writeRaster(x = purity_stack,  overwrite = TRUE,
-            filename = paste0('dataProcessing/', brick_fname, '.grd'))
+            filename = paste0('dataProcessing/', batch_name, '/', brick_fname, '.grd'))
 

@@ -3,8 +3,8 @@ require(ggplot2)
 require(grid)
 require(dplyr)
 
-LC1 <- 'TS2'
-LC0 <- 'TS1'
+LC1 <- 'TS1'
+LC0 <- 'TS9'
 
 load('dataProcessing/df-ideal-ts.Rda')
 
@@ -63,17 +63,17 @@ g.map.pur_avg <- mk.map(fill = 'pur_avg_dom', vir_opt = 'D')
 # g.map.pur_std <- mk.map(fill = 'pur_std', vir_opt = 'D')
 g.map.pur_std <- mk.map(fill = 'log(pur_avg_dom/pur_std)', vir_opt = 'D')
 
-g.map.var_tot <- mk.map(fill = 'var_sig/var_res', vir_opt = 'B')
+g.map.var_tot <- mk.map(fill = 'var_sig/var_tot', vir_opt = 'B')
 g.map.var_sig <- mk.map(fill = '1/var_res', vir_opt = 'B')
-g.map.var_res <- mk.map(fill = '1-var_res/var_tot', vir_opt = 'B')
+g.map.var_res <- mk.map(fill = '1-var_res/max(var_res)', vir_opt = 'B')
 
-g.plot.var_tot.pur_avg <- mk.plot(y = 'pur_avg_dom', x = 'var_sig/var_res')
+g.plot.var_tot.pur_avg <- mk.plot(y = 'pur_avg_dom', x = 'var_sig/var_tot')
 g.plot.var_sig.pur_avg <- mk.plot(y = 'pur_avg_dom', x = '1/var_res')
-g.plot.var_res.pur_avg <- mk.plot(y = 'pur_avg_dom', x = '1-var_res/var_tot')
+g.plot.var_res.pur_avg <- mk.plot(y = 'pur_avg_dom', x = '1-var_res/max(var_res)')
 
-g.plot.var_tot.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = 'var_sig/var_res')
+g.plot.var_tot.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = 'var_sig/var_tot')
 g.plot.var_sig.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = '1/var_res')
-g.plot.var_res.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = '1-var_res/var_tot')
+g.plot.var_res.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = '1-var_res/max(var_res)')
 
 
 # printing the final plot -----

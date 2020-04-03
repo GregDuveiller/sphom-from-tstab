@@ -13,46 +13,38 @@ dir.create(path = 'dataProcessing', showWarnings = F, recursive = T)
 dir.create(path = 'textNotebooks', showWarnings = F, recursive = T)
 
 # Generate landscape
+
+
+
+
+batch_name <- 'batch_001'
+dir.create(path = paste0('dataProcessing/',batch_name,'/'), 
+           showWarnings = F, recursive = T)
+
+# source('codeProcessing/step1___generate-binary-landscape.R')
+# source('codeProcessing/step2___simulate-MODIS-purity.R')
+# source('codeProcessing/step3___simulate-temporal-behaviour.R')
+
+
+
 source('codeProcessing/step4___generate-synthetic-datablock.R')
 
-gen_syn_datablock(landscape_ID = 'landscape-2LC-id42', 
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS7', LC0 = 'TS1', ndvi_noise = 0.01)
-
-gen_syn_datablock(landscape_ID = 'landscape-2LC-id42', 
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS4', LC0 = 'TS1', ndvi_noise = 0.01)
-
-gen_syn_datablock(landscape_ID = 'landscape-2LC-id42', 
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS1', LC0 = 'TS3', ndvi_noise = 0.05)
-
-gen_syn_datablock(landscape_ID = 'landscape-2LC-id42', 
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS1', LC0 = 'TS3', ndvi_noise = 0.10)
-
-# gen_syn_datablock(landscape_ID = 'landscape-2LC-id42', 
-#                   psf_fname = 'PSF-AQUA-48-10', 
-#                   LC1 = 'TS4', LC0 = 'TS8', ndvi_noise = 0.01)
-# 
-# gen_syn_datablock(landscape_ID = 'landscape-2LC-id42', 
-#                   psf_fname = 'PSF-AQUA-48-10', 
-#                   LC1 = 'TS2', LC0 = 'TS7', ndvi_noise = 0.01)
+for(iTS in c('TS2','TS3','TS4','TS5','TS6','TS7','TS1')){
+  TS_ref <- 'TS1'
+  print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
+    gen_syn_datablock(batch_name = 'batch_001',
+                    psf_fname = 'PSF-AQUA-48-10', 
+                    LC1 = TS_ref, LC0 = iTS)
+  print('<<< operation complete!')
+}
 
 source('codeProcessing/step5___calculate-temporal-metrics.R')
 
-calc_temp_metrics(landscape_ID = 'landscape-2LC-id42', 
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS7', LC0 = 'TS1', ndvi_noise = 0.01)
-
-calc_temp_metrics(landscape_ID = 'landscape-2LC-id42', 
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS4', LC0 = 'TS1', ndvi_noise = 0.01)
-
-calc_temp_metrics(landscape_ID = 'landscape-2LC-id42', 
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS1', LC0 = 'TS3', ndvi_noise = 0.05)
-
-calc_temp_metrics(landscape_ID = 'landscape-2LC-id42', 
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS1', LC0 = 'TS3', ndvi_noise = 0.10)
+for(iTS in c('TS2','TS3','TS4','TS5','TS6','TS7','TS1')){
+  TS_ref <- 'TS1'
+  print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
+  calc_temp_metrics(batch_name = 'batch_001',
+                    psf_fname = 'PSF-AQUA-48-10', 
+                    LC1 = 'TS1', LC0 = iTS)
+  print('<<< operation complete!')
+}

@@ -1,4 +1,4 @@
-gen_syn_datablock = function(landscape_ID, psf_fname, LC1, LC0, ndvi_noise){
+gen_syn_datablock = function(batch_name, psf_fname, LC1, LC0){
 # step4___generate-synthetic-datablock.R
 #
 # Step 4 in spHomogeneity simulation: assigning phenology and convolving 
@@ -11,19 +11,22 @@ require(dplyr)
 # psf_fname <- 'PSF-AQUA-48-10'
 # LC1 <- 'TS1'
 # LC0 <- 'TS7'
-# 
-# # set some NDVI noise to make things more realistic
-# ndvi_noise <- 0.01 #  Not sure still if we need it
 
+  
+# set some NDVI noise to make things more realistic
+ndvi_noise <- 0 #  Not sure still if we need it
 
+# for now, we set the spatial perturbation to 0
+spat_perturb <- NULL
+  
 # load PSF
-load(paste0('dataProcessing/', psf_fname, '.Rda')) # list_PSF
+load(paste0('dataProcessing/', batch_name, '/', psf_fname, '.Rda')) # list_PSF
 
 # load purity raster
-purity_stack <- brick(x = paste0('dataProcessing/', landscape_ID, 
-                                 '___purity-', psf_fname))
+purity_stack <- brick(x = paste0('dataProcessing/', batch_name, '/', 
+                                 'purity-', psf_fname))
 # load original raster
-r <- raster(x = paste0('dataProcessing/', landscape_ID, '___map'))
+r <- raster(x = paste0('dataProcessing/', batch_name, '/map'))
 
 # get spatial reso of original pixels
 spres <- as.numeric(strsplit(psf_fname, split = '-')[[1]][4])/res(r)[1]
@@ -34,17 +37,17 @@ npixi <- dim(purity_stack)[1]*res(purity_stack)[1]
 # make modis L2G grid 
 buf <- 500 # buffer to avoid border effects...
 dum <- seq(buf, (npixi * spres) - buf, 231.56)/spres 
-grd <- data.frame(y = rep(dum, times = length(dum)), 
-                  x = rep(dum, each = length(dum))) # x & y should be flipped
+grd <- data.frame(x = rep(dum, times = length(dum)), 
+                  y = rep(dum, each = length(dum)))
 
-# # sanity check plot
-# plot(r)
-# plot(purity_stack[[1]])
-# points(grd, pch = 3)
- 
+# load original raster
+o <- raster::extract(x = r, y = grd)
+df.grd <- data.frame(grd_id = as.numeric(rownames(grd)),
+                     y = grd$y, x = grd$x, original_id = o) 
+
 
 # load prescribed NDVI curves
-load('dataProcessing/df-ideal-ts.Rda')  # 'df.ideal.ts'
+load(paste0('dataProcessing/', batch_name, '/df-ideal-ts.Rda'))  # 'df.ideal.ts'
 doi_vctr <- df.ideal.ts$DOI
 
 # function to calc and gather data at a given time step
@@ -66,11 +69,13 @@ conv.NDVI <- function(ti, LC1, LC0, grd){
   # apply convolution
   conv <- focal(ri, list_PSF[[angi]], pad = T, padValue = LC0[ti])
   
+  if(!is.null(spat_perturb)){
   # pertrub grid (to simulate position uncertainty)
-  rho <- rnorm(1, 0, 50/spres)   # division by 'spres' needed to keep units 
+  rho <- rnorm(1, 0, 50/spres)   # division by 'spres' needed to keep units
   theta <- runif(1, 0, 2*pi)
-  grdi <- grd + cbind(rep(rho*cos(theta), dim(grd)[1]), 
-                      rep(rho*sin(theta), dim(grd)[1])) 
+  grdi <- grd + cbind(rep(rho*cos(theta), dim(grd)[1]),
+                      rep(rho*sin(theta), dim(grd)[1]))
+  } else {grdi <- grd}
   
   # setup df by grid id before perturbation
   df.out <- data.frame(grd_id = as.numeric(rownames(grd)),  
@@ -99,9 +104,9 @@ for(iT in doi_vctr){
 #   bind_cols(grd) %>%
 #   mutate(original_id = raster::extract(x = r, y = grd))
 
-save(list = c('df.all','grd'), file = paste0('dataProcessing/', landscape_ID, 
-                             '___datablock-', LC1, '-', LC0, '-', ndvi_noise, 
-                             '___', psf_fname, '.Rda'))
+save(list = c('df.all','df.grd'), 
+     file = paste0('dataProcessing/', batch_name, 
+                   '/datablock-', LC1, '-', LC0, '___', psf_fname, '.Rda'))
 
 
 }
