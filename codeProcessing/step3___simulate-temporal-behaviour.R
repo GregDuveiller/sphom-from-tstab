@@ -34,13 +34,17 @@ TS5 <- TS1 + 0.1
 # scaling
 TS6 <- TS1/2
 
-# flat signal
+# flat signal high
 TS7 <- rep(0.6, times = length(doi_vctr))
 
+# flat signal low
+TS8 <- rep(0.1, times = length(doi_vctr))
 
+# scaling
+TS9 <- TS6 + 0.4
 # 
 
-df.ideal.ts <- data.frame(DOI = doi_vctr, TS1, TS2, TS3, TS4, TS5, TS6, TS7) 
+df.ideal.ts <- data.frame(DOI = doi_vctr, TS1, TS2, TS3, TS4, TS5, TS6, TS7, TS8, TS9) 
 
 save('df.ideal.ts', 
      file = paste0('dataProcessing/', batch_name, '/df-ideal-ts.Rda'))
@@ -51,7 +55,7 @@ require(tidyr)
 g <- ggplot(df.ideal.ts %>%
               pivot_longer(-DOI, names_to = 'TS', values_to = "NDVI")) + 
   geom_line(aes(x = DOI, y = NDVI, colour = TS)) +
-  scale_color_brewer(type = "qual")
+  scale_color_viridis_d()
 
 ggsave(filename = 'test_profiles.png', plot = g, 
        path = paste0('dataProcessing/', batch_name, '/'),

@@ -3,13 +3,13 @@ require(ggplot2)
 require(grid)
 require(dplyr)
 
-LC1 <- 'TS1'
+LC1 <- 'TS8'
 LC0 <- 'TS9'
+batch_name <- 'batch_001'
+load(paste0('dataProcessing/', batch_name, '/df-ideal-ts.Rda'))
 
-load('dataProcessing/df-ideal-ts.Rda')
-
-load(paste0('dataProcessing/landscape-2LC-id42___metrics-', LC1,'-', LC0, 
-            '-0.01___PSF-AQUA-48-10.Rda'))  # df.sum
+load(paste0('dataProcessing/', batch_name, '/metrics-', LC1,'-', LC0, 
+            '___PSF-AQUA-48-10.Rda'))  # df.sum
 
 df.sum <- df.sum %>%
   mutate(pur_avg_dom = ifelse(pur_avg < 0.5, 1 - pur_avg, pur_avg))
@@ -24,11 +24,16 @@ col.3 <- 'grey20'
 col.4 <- 'grey60'
 
 # function for 'plots'
-mk.plot <- function(y, x){
+mk.plot <- function(y, x, ylim = NULL, xlim = NULL){
   g <- ggplot(df.sum, aes_string(y = y, x = x)) +
     geom_point(shape = 3, aes(colour = factor(original_id))) +
     geom_smooth(method = 'loess', formula = 'y ~ x', colour = col.3) + 
     scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
+  
+  if(!is.null(ylim) | !is.null(xlim)){
+    g <- g + coord_cartesian(ylim = ylim, xlim = xlim)
+  }
+  
   return(g)
 }
 # mk.plot(y = 'pur_avg', x = 'var_sig')
@@ -63,22 +68,22 @@ g.map.pur_avg <- mk.map(fill = 'pur_avg_dom', vir_opt = 'D')
 # g.map.pur_std <- mk.map(fill = 'pur_std', vir_opt = 'D')
 g.map.pur_std <- mk.map(fill = 'log(pur_avg_dom/pur_std)', vir_opt = 'D')
 
-g.map.var_tot <- mk.map(fill = 'var_sig/var_tot', vir_opt = 'B')
+g.map.var_tot <- mk.map(fill = 'entropy', vir_opt = 'B')
 g.map.var_sig <- mk.map(fill = '1/var_res', vir_opt = 'B')
-g.map.var_res <- mk.map(fill = '1-var_res/max(var_res)', vir_opt = 'B')
+g.map.var_res <- mk.map(fill = '1-(entropy/7.78)', vir_opt = 'B')
 
-g.plot.var_tot.pur_avg <- mk.plot(y = 'pur_avg_dom', x = 'var_sig/var_tot')
+g.plot.var_tot.pur_avg <- mk.plot(y = 'pur_avg_dom', x = 'entropy')
 g.plot.var_sig.pur_avg <- mk.plot(y = 'pur_avg_dom', x = '1/var_res')
-g.plot.var_res.pur_avg <- mk.plot(y = 'pur_avg_dom', x = '1-var_res/max(var_res)')
+g.plot.var_res.pur_avg <- mk.plot(y = 'pur_avg_dom', x = '1-(entropy/7.78)')
 
-g.plot.var_tot.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = 'var_sig/var_tot')
+g.plot.var_tot.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = 'entropy')
 g.plot.var_sig.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = '1/var_res')
-g.plot.var_res.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = '1-var_res/max(var_res)')
+g.plot.var_res.pur_std <- mk.plot(y = 'log(pur_avg_dom/pur_std)', x = '1-(entropy/7.78)')
 
 
 # printing the final plot -----
 fig.name <- paste0('xplrfig___',LC1,'-',LC0,'_testmetrics')
-fig.path <- 'xplrFigures/test' ; 
+fig.path <- paste0('dataProcessing/', batch_name,'/figs')
 dir.create(fig.path, showWarnings = F, recursive = T)
 fig.width <- 16; fig.height <- 12;  fig.fmt <- 'png'
 fig.fullfname <- paste0(fig.path, '/', fig.name, '.', fig.fmt)

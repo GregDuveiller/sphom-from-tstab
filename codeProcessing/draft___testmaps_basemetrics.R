@@ -1,4 +1,4 @@
-plot_metrics = function(landscape_ID, psf_fname, LC1, LC0, ndvi_noise){
+plot_metrics = function(batch_name, psf_fname, LC1, LC0){
 
 
 # initializing the script -----
@@ -13,10 +13,10 @@ require(dplyr)
 # ndvi_noise <- 0.01
   
   
-load('dataProcessing/df-ideal-ts.Rda')
+load(paste0('dataProcessing/', batch_name, '/df-ideal-ts.Rda'))
 
-load(paste0('dataProcessing/', landscape_ID, '___metrics-', LC1,'-', LC0, 
-            '-', ndvi_noise, '___', psf_fname, '.Rda'))  # df.sum
+load(paste0('dataProcessing/', batch_name, '/metrics-', LC1,'-', LC0, 
+            '___', psf_fname, '.Rda'))  # df.sum
 
 df.sum <- df.sum %>%
   mutate(pur_avg_dom = ifelse(pur_avg < 0.5, 1 - pur_avg, pur_avg))
@@ -37,7 +37,7 @@ mk.plot <- function(y, x, ylim = NULL, xlim = NULL){
     geom_smooth(method = 'loess', formula = 'y ~ x', colour = col.3) + 
     scale_colour_manual(values = c('1' = col.1, '0' = col.2), guide = 'none')
   
-  if(!is.null(ylim) | !is.null(ylim)){
+  if(!is.null(ylim) | !is.null(xlim)){
     g <- g + coord_cartesian(ylim = ylim, xlim = xlim)
     }
   return(g)
@@ -87,7 +87,7 @@ g.plot.var_res.pur_std <- mk.plot(y = 'pur_std', x = 'var_res', ylim = c(0, 0.25
 
 
 # printing the final plot -----
-fig.name <- paste0('xplrfig___',LC1,'-',LC0,'-',ndvi_noise,'_basemetrics')
+fig.name <- paste0('xplrfig___',LC1,'-',LC0,'_basemetrics')
 fig.path <- 'xplrFigures' ; 
 dir.create(fig.path, showWarnings = F, recursive = T)
 fig.width <- 16; fig.height <- 12;  fig.fmt <- 'png'
@@ -128,22 +128,22 @@ g.pheno <- ggplot(df.ideal.ts, aes(x = DOI)) +
 g.map.pur_avg <- mk.map(fill = 'pur_avg_dom', vir_opt = 'D')
 g.map.pur_std <- mk.map(fill = 'pur_std', vir_opt = 'D')
 
-g.map.var_tot <- mk.map(fill = 'var_sig/var_tot', vir_opt = 'B')
-g.map.var_sig <- mk.map(fill = 'var_sig/var_res', vir_opt = 'B')
-g.map.var_res <- mk.map(fill = '1/var_res', vir_opt = 'B')
+g.map.var_tot <- mk.map(fill = 'var_tot', vir_opt = 'B')
+g.map.var_sig <- mk.map(fill = 'var_sig', vir_opt = 'B')
+g.map.var_res <- mk.map(fill = 'var_res', vir_opt = 'B')
 
-g.plot.var_tot.pur_avg <- mk.plot(y = 'pur_avg_dom', x = 'var_sig/var_tot', ylim = c(0.5, 1))
-g.plot.var_sig.pur_avg <- mk.plot(y = 'pur_avg_dom', x = 'var_sig/var_res', ylim = c(0.5, 1))
-g.plot.var_res.pur_avg <- mk.plot(y = 'pur_avg_dom', x = '1/var_res', ylim = c(0.5, 1))
+g.plot.var_tot.pur_avg <- mk.plot(y = 'pur_avg_dom', x = 'var_tot', ylim = c(0.5, 1))
+g.plot.var_sig.pur_avg <- mk.plot(y = 'pur_avg_dom', x = 'var_sig', ylim = c(0.5, 1))
+g.plot.var_res.pur_avg <- mk.plot(y = 'pur_avg_dom', x = 'var_res', ylim = c(0.5, 1))
 
-g.plot.var_tot.pur_std <- mk.plot(y = 'pur_std', x = 'var_sig/var_tot', ylim = c(0, 0.25))
-g.plot.var_sig.pur_std <- mk.plot(y = 'pur_std', x = 'var_sig/var_res', ylim = c(0, 0.25))
-g.plot.var_res.pur_std <- mk.plot(y = 'pur_std', x = '1/var_res', ylim = c(0, 0.25))
+g.plot.var_tot.pur_std <- mk.plot(y = 'pur_std', x = 'var_tot', ylim = c(0, 0.25))
+g.plot.var_sig.pur_std <- mk.plot(y = 'pur_std', x = 'var_sig', ylim = c(0, 0.25))
+g.plot.var_res.pur_std <- mk.plot(y = 'pur_std', x = 'var_res', ylim = c(0, 0.25))
 
 
 # printing the final plot -----
-fig.name <- paste0('xplrfig___', LC1, '-', LC0, '-', ndvi_noise, '_testmetrics')
-fig.path <- 'xplrFigures' ; 
+fig.name <- paste0('xplrfig___',LC1,'-',LC0,'_basemetrics')
+fig.path <- paste0('dataProcessing/', batch_name,'/figs')
 dir.create(fig.path, showWarnings = F, recursive = T)
 fig.width <- 16; fig.height <- 12;  fig.fmt <- 'png'
 fig.fullfname <- paste0(fig.path, '/', fig.name, '.', fig.fmt)

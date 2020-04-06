@@ -7,8 +7,9 @@ calc_temp_metrics = function(batch_name, psf_fname, LC1, LC0){
 require(dplyr)
 require(tidyr)
 require(purrr)
-
-# psf_fname <- 'PSF-AQUA-48-20'
+require(entropy)
+  
+# psf_fname <- 'PSF-AQUA-48-10'
 # LC1 <- 'TS1'
 # LC0 <- 'TS4'
 
@@ -51,10 +52,10 @@ for(iGrd in unique(df.all$grd_id)){
     filter(!is.na(NDVI)) %>%    #  for some reason, sometimes we have some
     mutate(NDVI.smo = smooth.spline(x = DOI, y = NDVI, df = 8)$y,
            NDVI.res = NDVI - NDVI.smo,
-           prob.res = cut(NDVI.res, breaks = seq(-1,1,0.01)))
+           p.res.01 = cut(NDVI.res, breaks = seq(-2,2,0.005)))
   
-  df.2 <- df.1 %>% count(prob.res)
-
+  df.p.res.01 <- df.1 %>% count(p.res.01)
+  
   df.sum <- df.1 %>%
     summarise(grd_id = iGrd,
               pur_avg = mean(Purity),
@@ -62,8 +63,7 @@ for(iGrd in unique(df.all$grd_id)){
               var_res = var(NDVI.smo - NDVI),
               var_sig = var(NDVI.smo),
               var_tot = var(NDVI)) %>% 
-    bind_cols(ent_nat = entropy.MillerMadow(df.2$n),
-              ent_log = entropy.MillerMadow(df.2$n, unit = "log10")) %>%
+    bind_cols(entropy = entropy.MillerMadow(df.p.res.01$n)) %>%
     bind_rows(df.sum)
   
 }

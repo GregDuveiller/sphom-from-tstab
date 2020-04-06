@@ -29,7 +29,7 @@ dir.create(path = paste0('dataProcessing/',batch_name,'/'),
 
 source('codeProcessing/step4___generate-synthetic-datablock.R')
 
-for(iTS in c('TS2','TS3','TS4','TS5','TS6','TS7','TS1')){
+for(iTS in c('TS8','TS9')){
   TS_ref <- 'TS1'
   print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
     gen_syn_datablock(batch_name = 'batch_001',
@@ -38,13 +38,40 @@ for(iTS in c('TS2','TS3','TS4','TS5','TS6','TS7','TS1')){
   print('<<< operation complete!')
 }
 
+for(iTS in c('TS8','TS9')){
+  TS_ref <- 'TS6'
+  print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
+  gen_syn_datablock(batch_name = 'batch_001',
+                    psf_fname = 'PSF-AQUA-48-10', 
+                    LC1 = TS_ref, LC0 = iTS)
+  print('<<< operation complete!')
+}
+
+gen_syn_datablock(batch_name = 'batch_001',
+                  psf_fname = 'PSF-AQUA-48-10', 
+                  LC1 = 'TS8', LC0 = 'TS9')
+
+
 source('codeProcessing/step5___calculate-temporal-metrics.R')
 
-for(iTS in c('TS2','TS3','TS4','TS5','TS6','TS7','TS1')){
+for(iTS in c('TS2','TS3','TS4','TS5','TS6','TS7','TS8','TS9')){
   TS_ref <- 'TS1'
   print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
   calc_temp_metrics(batch_name = 'batch_001',
                     psf_fname = 'PSF-AQUA-48-10', 
-                    LC1 = 'TS1', LC0 = iTS)
+                    LC1 = TS_ref, LC0 = iTS)
   print('<<< operation complete!')
 }
+
+for(iTS in c('TS8','TS9')){
+  TS_ref <- 'TS6'
+  print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
+  calc_temp_metrics(batch_name = 'batch_001',
+                    psf_fname = 'PSF-AQUA-48-10', 
+                    LC1 = TS_ref, LC0 = iTS)
+  print('<<< operation complete!')
+}
+
+calc_temp_metrics(batch_name = 'batch_001',
+                  psf_fname = 'PSF-AQUA-48-10', 
+                  LC1 = 'TS8', LC0 = 'TS9')
