@@ -74,4 +74,4 @@ for(iTS in c('TS8','TS9')){
 
 calc_temp_metrics(batch_name = 'batch_001',
                   psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS8', LC0 = 'TS9')
+                  LC1 = 'TS1', LC0 = 'TS1')
