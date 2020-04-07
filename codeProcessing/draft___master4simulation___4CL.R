@@ -17,16 +17,16 @@ dir.create(path = 'textNotebooks', showWarnings = F, recursive = T)
 
 
 
-batch_name <- 'batch_001'
+batch_name <- 'batch_002'
 dir.create(path = paste0('dataProcessing/',batch_name,'/'), 
            showWarnings = F, recursive = T)
 
 
-source('codeProcessing/step1___generate-binary-landscape.R')
-
+source('codeProcessing/step1___generate-4class-landscape.R')
+gen_4LC_landscape(batch_name)
 
 # source('codeProcessing/step2___simulate-MODIS-purity.R')
-# source('codeProcessing/step3___simulate-temporal-behaviour.R')
+source('codeProcessing/step3___simulate-temporal-behaviour.R')
 
 
 

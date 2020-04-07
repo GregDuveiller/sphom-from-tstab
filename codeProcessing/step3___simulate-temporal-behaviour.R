@@ -1,7 +1,9 @@
 # step3___simulate-temporal-behaviour.R
 #
 # Step 3 in spHomogeneity simulation: define the prescribed NDVI curves
-
+require(ggplot2)
+require(tidyr)
+require(dplyr)
 
 # temporal vector
 doi_vctr <- 1:365
@@ -49,8 +51,7 @@ df.ideal.ts <- data.frame(DOI = doi_vctr, TS1, TS2, TS3, TS4, TS5, TS6, TS7, TS8
 save('df.ideal.ts', 
      file = paste0('dataProcessing/', batch_name, '/df-ideal-ts.Rda'))
 
-require(ggplot2)
-require(tidyr)
+
 
 g <- ggplot(df.ideal.ts %>%
               pivot_longer(-DOI, names_to = 'TS', values_to = "NDVI")) + 
