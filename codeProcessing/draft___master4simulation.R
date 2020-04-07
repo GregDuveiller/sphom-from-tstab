@@ -14,67 +14,74 @@ dir.create(path = 'textNotebooks', showWarnings = F, recursive = T)
 
 # Generate landscape
 
+batch_name <- 'batch_002'
+LC_list <- c('LC1', 'LC2', 'LC3', 'LC4')
+TS2LC <- c('LC1'='TS1', 'LC2'='TS8', 'LC3'='TS3', 'LC4'='TS9')
 
-
-
-batch_name <- 'batch_001'
 dir.create(path = paste0('dataProcessing/',batch_name,'/'), 
            showWarnings = F, recursive = T)
 
 
-source('codeProcessing/step1___generate-binary-landscape.R')
+source('codeProcessing/step1___generate-synthetic-landscape.R')
+gen_syn_landscape(batch_name, landscape_seed = 42, LC_list)
 
-
-# source('codeProcessing/step2___simulate-MODIS-purity.R')
+source('codeProcessing/step2___simulate-MODIS-purity.R')
 # source('codeProcessing/step3___simulate-temporal-behaviour.R')
 
 
 
 source('codeProcessing/step4___generate-synthetic-datablock.R')
 
-for(iTS in c('TS8','TS9')){
-  TS_ref <- 'TS1'
-  print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
-    gen_syn_datablock(batch_name = 'batch_001',
-                    psf_fname = 'PSF-AQUA-48-10', 
-                    LC1 = TS_ref, LC0 = iTS)
-  print('<<< operation complete!')
-}
-
-for(iTS in c('TS8','TS9')){
-  TS_ref <- 'TS6'
-  print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
-  gen_syn_datablock(batch_name = 'batch_001',
-                    psf_fname = 'PSF-AQUA-48-10', 
-                    LC1 = TS_ref, LC0 = iTS)
-  print('<<< operation complete!')
-}
-
-gen_syn_datablock(batch_name = 'batch_001',
+gen_syn_datablock(batch_name = 'batch_002',
                   psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS8', LC0 = 'TS9')
+                  TS2LC = c('LC1'='TS1', 'LC2'='TS8', 'LC3'='TS3', 'LC4'='TS9'))
 
 
-source('codeProcessing/step5___calculate-temporal-metrics.R')
 
-for(iTS in c('TS2','TS3','TS4','TS5','TS6','TS7','TS8','TS9')){
-  TS_ref <- 'TS1'
-  print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
-  calc_temp_metrics(batch_name = 'batch_001',
-                    psf_fname = 'PSF-AQUA-48-10', 
-                    LC1 = TS_ref, LC0 = iTS)
-  print('<<< operation complete!')
-}
 
-for(iTS in c('TS8','TS9')){
-  TS_ref <- 'TS6'
-  print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
-  calc_temp_metrics(batch_name = 'batch_001',
-                    psf_fname = 'PSF-AQUA-48-10', 
-                    LC1 = TS_ref, LC0 = iTS)
-  print('<<< operation complete!')
-}
-
-calc_temp_metrics(batch_name = 'batch_001',
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  LC1 = 'TS1', LC0 = 'TS1')
+# for(iTS in c('TS8','TS9')){
+#   TS_ref <- 'TS1'
+#   print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
+#     gen_syn_datablock(batch_name = 'batch_001',
+#                     psf_fname = 'PSF-AQUA-48-10', 
+#                     LC1 = TS_ref, LC0 = iTS)
+#   print('<<< operation complete!')
+# }
+# 
+# for(iTS in c('TS8','TS9')){
+#   TS_ref <- 'TS6'
+#   print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
+#   gen_syn_datablock(batch_name = 'batch_001',
+#                     psf_fname = 'PSF-AQUA-48-10', 
+#                     LC1 = TS_ref, LC0 = iTS)
+#   print('<<< operation complete!')
+# }
+# 
+# gen_syn_datablock(batch_name = 'batch_001',
+#                   psf_fname = 'PSF-AQUA-48-10', 
+#                   LC1 = 'TS8', LC0 = 'TS9')
+# 
+# 
+# source('codeProcessing/step5___calculate-temporal-metrics.R')
+# 
+# for(iTS in c('TS2','TS3','TS4','TS5','TS6','TS7','TS8','TS9')){
+#   TS_ref <- 'TS1'
+#   print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
+#   calc_temp_metrics(batch_name = 'batch_001',
+#                     psf_fname = 'PSF-AQUA-48-10', 
+#                     LC1 = TS_ref, LC0 = iTS)
+#   print('<<< operation complete!')
+# }
+# 
+# for(iTS in c('TS8','TS9')){
+#   TS_ref <- 'TS6'
+#   print(paste('>>> Processing', TS_ref, 'vs', iTS, '...'))
+#   calc_temp_metrics(batch_name = 'batch_001',
+#                     psf_fname = 'PSF-AQUA-48-10', 
+#                     LC1 = TS_ref, LC0 = iTS)
+#   print('<<< operation complete!')
+# }
+# 
+# calc_temp_metrics(batch_name = 'batch_001',
+#                   psf_fname = 'PSF-AQUA-48-10', 
+#                   LC1 = 'TS1', LC0 = 'TS1')
