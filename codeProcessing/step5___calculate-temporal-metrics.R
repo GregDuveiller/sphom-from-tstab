@@ -1,4 +1,4 @@
-calc_temp_metrics = function(batch_name, psf_fname, LC1, LC0){
+calc_temp_metrics = function(batch_name, psf_fname, TS2LC){
 # step5___calculate-temporal-metrics.R
 #
 # Step 5 in spHomogeneity simulation: calculating temporal metrics 
@@ -15,7 +15,8 @@ require(entropy)
 
 # load target dataset
 load(paste0('dataProcessing/', batch_name, 
-            '/datablock-', LC1, '-', LC0, '___', psf_fname, '.Rda'))  # 'df.all' & 'df.grd'
+            '/datablock-', paste(TS2LC, collapse = '-'),
+            '___', psf_fname, '.Rda'))  # 'df.all' & 'df.grd'
 
 
 # load('dataProcessing/landscape-2LC-id42___datablock-TS1-TS2-0.01___PSF-AQUA-48-10.Rda')
@@ -56,14 +57,25 @@ for(iGrd in unique(df.all$grd_id)){
   
   df.p.res.01 <- df.1 %>% count(p.res.01)
   
+  df.2 <- df.1 %>% 
+    dplyr::select(paste('purity', TS2LC, sep = '_')) %>% 
+    map_dfr(function(x) mean(x)) 
+  colnames(df.2) <- sub("purity", "pur_avg", colnames(df.2))
+  
+  df.3 <- df.1 %>% 
+    dplyr::select(paste('purity', TS2LC, sep = '_')) %>% 
+    map_dfr(function(x) sd(x)) 
+  colnames(df.3) <- sub("purity", "pur_std", colnames(df.3))
+  
   df.sum <- df.1 %>%
     summarise(grd_id = iGrd,
-              pur_avg = mean(Purity),
-              pur_std = sd(Purity),
+              # pur_avg = mean(Purity),
+              # pur_std = sd(Purity),
               var_res = var(NDVI.smo - NDVI),
               var_sig = var(NDVI.smo),
               var_tot = var(NDVI)) %>% 
-    bind_cols(entropy = entropy.MillerMadow(df.p.res.01$n)) %>%
+    bind_cols(entropy = entropy.MillerMadow(df.p.res.01$n),
+              df.2, df.3) %>%
     bind_rows(df.sum)
   
 }
