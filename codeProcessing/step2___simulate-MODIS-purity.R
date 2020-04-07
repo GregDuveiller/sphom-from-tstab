@@ -1,14 +1,11 @@
-# step2___simulate-MODIS-purity.R
+sim_MODIS_purity = function(batch_name, LC_list){
+  # step2___simulate-MODIS-purity.R
 #
 # Step 2 in spHomogeneity simulation: simulating how the MODIS instruments
 # samples the synthetic landscape. This involves modelling the MODIS spatial
 # response and using it to generate so-called "pixel purity maps"
 
 require(raster)
-require(pracma)
-require(spatstat)
-require(akima)
-
 
 # load raster dataset
 r <- raster(paste0('dataProcessing/', batch_name,'/map'))
@@ -68,10 +65,12 @@ psf_fname <- paste('PSF', platform, lat, MODsc, sep = '-')
 save('list_PSF',  
      file = paste0('dataProcessing/', batch_name, '/', psf_fname, '.Rda'))
 
+for(iLC in LC_list){
+
 list_purityMaps <- list()
 # make the purity maps... 
 for(i in 1:length(list_PSF)){
-  tic <- Sys.time(); out <- focal(r, list_PSF[[i]], pad = T, padValue = 0); toc <- Sys.time() - tic
+  tic <- Sys.time(); out <- focal(r, list_PSF[[i]], pad = F); toc <- Sys.time() - tic
   out.int <- round(out*1000)/1000
   list_purityMaps[[i]] <- out.int
 }
@@ -83,3 +82,5 @@ brick_fname <- paste0('purity-', psf_fname)
 writeRaster(x = purity_stack,  overwrite = TRUE,
             filename = paste0('dataProcessing/', batch_name, '/', brick_fname, '.grd'))
 
+}
+}
