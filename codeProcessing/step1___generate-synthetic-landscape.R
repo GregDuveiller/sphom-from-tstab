@@ -1,4 +1,4 @@
-gen_syn_landscape = function(batch_name, landscape_seed, LC_list){
+gen_syn_landscape = function(batch_name, landscape_seed, TS2LC){
 # step1___generate-synthetic-landscape.R
 #
 # Step 1 in spHomogeneity simulation: generating a random landscape that 
@@ -17,7 +17,7 @@ tempmask <- make.mask(nx = npixi, ny = npixi, spacing = 1, buffer = 0)
 # generate landscape
 r0 <- raster(tempmask)
 
-nLC <- length(LC_list)
+nLC <- length(TS2LC)
 r0[] <- nLC # set last number in the list
 
 if(nLC == 5){

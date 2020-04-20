@@ -44,7 +44,7 @@ if(!is.null(temp_subsample)){
 
 
 
-
+pb <- txtProgressBar(min = 0, max = max(df.all$grd_id), initial = 0)
 df.sum <- data.frame(NULL)
 for(iGrd in unique(df.all$grd_id)){
   
@@ -78,17 +78,18 @@ for(iGrd in unique(df.all$grd_id)){
               df.2, df.3) %>%
     bind_rows(df.sum)
   
+  setTxtProgressBar(pb, iGrd)
 }
 
 
 df.sum <- df.sum %>% 
   left_join(df.grd, by = 'grd_id') # add grid info
 
-
-
+close(pb)
 
 # save outputs
 save('df.sum', 
      file = paste0('dataProcessing/', batch_name,
-                   '/metrics-', LC1, '-', LC0, '___', psf_fname, '.Rda'))
+                   '/metrics-', paste(TS2LC, collapse = '-'),
+                   '___', psf_fname, '.Rda'))
 }

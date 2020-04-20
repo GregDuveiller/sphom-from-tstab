@@ -15,7 +15,7 @@ dir.create(path = 'textNotebooks', showWarnings = F, recursive = T)
 # Generate landscape
 
 batch_name <- 'batch_002'
-LC_list <- c('LC1', 'LC2', 'LC3', 'LC4')
+psf_fname <- 'PSF-AQUA-48-20'
 TS2LC <- c('LC1'='TS1', 'LC2'='TS8', 'LC3'='TS3', 'LC4'='TS9')
 
 dir.create(path = paste0('dataProcessing/',batch_name,'/'), 
@@ -23,21 +23,25 @@ dir.create(path = paste0('dataProcessing/',batch_name,'/'),
 
 
 source('codeProcessing/step1___generate-synthetic-landscape.R')
-gen_syn_landscape(batch_name, landscape_seed = 42, LC_list)
+gen_syn_landscape(batch_name, landscape_seed = 42, TS2LC)
 
 source('codeProcessing/step2___simulate-MODIS-purity.R')
-# source('codeProcessing/step3___simulate-temporal-behaviour.R')
+sim_MODIS_purity(batch_name, TS2LC, spres = 100)
 
+source('codeProcessing/step3___simulate-temporal-behaviour.R')
 
 
 source('codeProcessing/step4___generate-synthetic-datablock.R')
 
-gen_syn_datablock(batch_name = 'batch_002',
-                  psf_fname = 'PSF-AQUA-48-10', 
-                  TS2LC = c('LC1'='TS1', 'LC2'='TS8', 'LC3'='TS3', 'LC4'='TS9'))
+gen_syn_datablock(batch_name = batch_name,
+                  psf_fname = psf_fname, 
+                  TS2LC = TS2LC)
 
+source('codeProcessing/step5___calculate-temporal-metrics.R')
 
-
+calc_temp_metrics(batch_name = batch_name,
+                  psf_fname = psf_fname,
+                  TS2LC = TS2LC)
 
 # for(iTS in c('TS8','TS9')){
 #   TS_ref <- 'TS1'

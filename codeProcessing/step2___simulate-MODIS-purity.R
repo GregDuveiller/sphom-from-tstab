@@ -1,4 +1,4 @@
-sim_MODIS_purity = function(batch_name, LC_list){
+sim_MODIS_purity = function(batch_name, TS2LC, spres){
   # step2___simulate-MODIS-purity.R
   #
   # Step 2 in spHomogeneity simulation: simulating how the MODIS instruments
@@ -10,8 +10,9 @@ sim_MODIS_purity = function(batch_name, LC_list){
   # load raster dataset
   r <- raster(paste0('dataProcessing/', batch_name,'/map'))
   
-  # defining the spatial resolution of the initial pixels in meters
-  spres <- 100 
+  # # defining the spatial resolution of the initial pixels in meters
+  # spres <- 100 
+  
   # definition of the scale at which the MODIS PSF will be implemented
   MODsc <- spres * res(r)[1]
   
@@ -65,7 +66,7 @@ sim_MODIS_purity = function(batch_name, LC_list){
   save('list_PSF',  
        file = paste0('dataProcessing/', batch_name, '/', psf_fname, '.Rda'))
   
-  for(iLC in LC_list){
+  for(iLC in names(TS2LC)){
     
     # make target LC
     r0 <- r == as.numeric(strsplit(iLC, 'LC')[[1]][2])

@@ -6,6 +6,8 @@ require(dplyr)
 
 
 batch_name <- 'batch_001'
+psf_fname <- 'PSF-AQUA-48-10'
+
 
 refval <- 'logMVpu'  # 'domMUpu', 'stdevpu'
 metric <- 'sig2tot'  # 'entropyScaled'
@@ -90,7 +92,7 @@ for(refval in c('logMVpu', 'domMUpu')){
       # combine all 3 for ease of use
       mk.all3 <- function(LC_ref, LC_oth){
         load(paste0('dataProcessing/', batch_name, '/metrics-', LC_ref,'-', LC_oth, 
-                    '___PSF-AQUA-48-10.Rda'))  # df.sum
+                    '___', psf_fname, '.Rda'))  # df.sum
         # should be in the previous data preparation step
         df.sum <- df.sum %>%
           mutate(pur_avg_dom = ifelse(pur_avg < 0.5, 1 - pur_avg, pur_avg))
@@ -105,11 +107,10 @@ for(refval in c('logMVpu', 'domMUpu')){
       
       # generating the subplots -----
       
-      
       # loading any ... 
       LC_ref <- 'TS1'; LC_oth <- 'TS2'
       load(paste0('dataProcessing/', batch_name, '/metrics-', LC_ref,'-', LC_oth, 
-                  '___PSF-AQUA-48-10.Rda')) 
+                  '___', psf_fname, '.Rda')) 
       # should be in the previous data preparation step
       df.sum <- df.sum %>%
         mutate(pur_avg_dom = ifelse(pur_avg < 0.5, 1 - pur_avg, pur_avg))
