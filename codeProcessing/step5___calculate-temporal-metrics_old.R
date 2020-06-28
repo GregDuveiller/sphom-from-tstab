@@ -33,7 +33,7 @@ if(!is.null(temp_subsample)){
 
 
 
-source('codeProcessing/calc_dbldiffres.R')
+source('codeProcessing/calc_TCI.R')
 
 
 pb <- txtProgressBar(min = 0, max = max(df.all$grd_id), initial = 0)
@@ -42,21 +42,34 @@ for(iGrd in unique(df.all$grd_id)){
   
   df.1 <- df.all %>% 
     filter(grd_id %in% iGrd, DOI %in% doi_vctr_sub) %>%
-    filter(!is.na(NDVI)) %>%    # for some reason, sometimes we have some
-    mutate(dbldif.res = c(NA, calc_dbldiffres(NDVI, DOI), NA)) %>%
-    filter(!is.na(dbldif.res))        # To remove the padding NAs 
-
+    filter(!is.na(NDVI)) %>%    #  for some reason, sometimes we have some
+    mutate(NDVI.smo = smooth.spline(x = DOI, y = NDVI, df = 8)$y,
+           NDVI.res = NDVI - NDVI.smo,
+           p.res.01 = cut(NDVI.res, breaks = seq(-2,2,0.005)))
+  
+  df.p.res.01 <- df.1 %>% count(p.res.01)
+  
+  df.2 <- df.1 %>% 
+    dplyr::select(paste('purity', TS2LC, sep = '_')) %>% 
+    map_dfr(function(x) mean(x)) 
+  colnames(df.2) <- sub("purity", "pur_avg", colnames(df.2))
+  
+  df.3 <- df.1 %>% 
+    dplyr::select(paste('purity', TS2LC, sep = '_')) %>% 
+    map_dfr(function(x) sd(x)) 
+  colnames(df.3) <- sub("purity", "pur_std", colnames(df.3))
+  
   df.sum <- df.1 %>%
     summarise(grd_id = iGrd,
               # pur_avg = mean(Purity),
               # pur_std = sd(Purity),
-              std_res = sd(dbldif.res),
-              entropy_gaussian = log(std_res) + log(2 * pi * exp(1))/2,
-              # entropy_gaussian = 0.5 * log(2 * pi * exp(1) * std_res^2),
-              TCI_prototype_01 = log(std_res)/log(0.01),
-              TCI_prototype_02 = log(std_res)/log(0.001),
-              TCI_prototype_03 = entropy_gaussian/(log(0.01) + log(2 * pi * exp(1))/2),
-              TCI_prototype_04 = 1 - exp(-entropy_gaussian)) 
+              var_res = var(NDVI.smo - NDVI),
+              var_sig = var(NDVI.smo),
+              var_tot = var(NDVI),
+              TCI = calc_TCI(NDVI, DOI)) %>% 
+    bind_cols(entropy = entropy.MillerMadow(df.p.res.01$n),
+              df.2, df.3) %>%
+    bind_rows(df.sum)
   
   setTxtProgressBar(pb, iGrd)
 }

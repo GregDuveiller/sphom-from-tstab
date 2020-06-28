@@ -45,10 +45,10 @@ for(i in ts_seq){
     for(k in bin_width_seq){
       df.row <- data.frame(
         ts = i, bin_range = j, bin_width = k,
-        entropy = smoothness_dblediff_entropy(ts$NDVI, ts$DOI.hour, 
+        entropy = smoothness_dbldif_entropy(ts$NDVI, ts$DOI.hour, 
                                               mode = 'entropy', bin_width = k, 
                                               bin_range = c(-j,j)),
-        scl_ent = smoothness_dblediff_entropy(ts$NDVI, ts$DOI.hour, 
+        scl_ent = smoothness_dbldif_entropy(ts$NDVI, ts$DOI.hour, 
                                               mode = 'scaled', bin_width = k, 
                                               bin_range = c(-j,j))) 
       df.metrics <- bind_rows(df.metrics, df.row)
