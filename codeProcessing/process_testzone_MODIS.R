@@ -3,10 +3,10 @@ require(ggplot2)
 require(dplyr)
 
 zone_name <- 'rondonia_2019'
-zone_name <- 'vercelli_2018'
-zone_name <- 'beauce_2019'
-zone_name <- 'hyytiala_2018'
-zone_name <- 'fresno_2019'
+# zone_name <- 'vercelli_2018'
+# zone_name <- 'beauce_2019'
+# zone_name <- 'hyytiala_2018'
+# zone_name <- 'fresno_2019'
 
 dpath <- paste0('../../../Google Drive/spHomogeneity_testzones_', zone_name)
 
@@ -15,7 +15,7 @@ dat1 <- read_csv(file = paste0(dpath,'/MODIS_AQUA_NDVI_datablock.csv'), col_name
 dat2 <- read_csv(file = paste0(dpath,'/MODIS_TERRA_NDVI_datablock.csv'), col_names = T, skip = 1)
 
 
-source('codeProcessing/smoothness_dblediff_entropy.R')
+source('codeProcessing/calc_TCI.R')
 
 dir.create(path = paste0('data/inter/modis_test_zones/', zone_name), 
            recursive = T, showWarnings = F)
@@ -51,20 +51,7 @@ dat.sum <- dat %>%
          DOI.hour = DOI + ifelse(platform == 'TERRA', 10.5/24, 13.5/24)) %>%
   group_by(pixID, lat, lon) %>%
   arrange(DOI.hour) %>%
-  summarise(STD = sd(smooth_dbldif_entropy(NDVI, DOI.hour,      
-                                           mode = 'residues', 
-                                           bin_width = 0.02, 
-                                           bin_range = c(-1,1))),
-            MAD = mean(abs(smooth_dbldif_entropy(NDVI, DOI.hour,      
-                                                 mode = 'residues', 
-                                                 bin_width = 0.02, 
-                                                 bin_range = c(-1,1)))),
-            TCE = smooth_dbldif_entropy(NDVI, DOI.hour,      
-                                        mode = 'entropy', bin_width = 0.02, 
-                                        bin_range = c(-1,1)),
-            TCI = smooth_dbldif_entropy(NDVI, DOI.hour,      
-                                        mode = 'scaled', bin_width = 0.02, 
-                                        bin_range = c(-1,1)))
+  summarise(TCI = calc_TCI(NDVI, DOI.hour))
 
 
 
@@ -107,10 +94,7 @@ df.ts <- dat %>%
   inner_join(iPixies, by = 'pixID') %>% 
   left_join(dat.sum, by = c('lat', 'lon', 'pixID')) %>%
   mutate(pixLbl_long = paste('Pixel', pixLbl, '|', 
-                             'TCI =', round(TCI, digits = 3), '|',
-                             'entropy =', round(TCE, digits = 4), '|',
-                             'std =', round(STD, digits = 4), '|',
-                             'MAD =', round(MAD, digits = 4)))
+                             'TCI =', round(TCI, digits = 3)))
 
 
 g.map.TCI <- ggplot(dat.sum) +
@@ -147,7 +131,7 @@ g.ts <- ggplot(df.ts) +
         panel.grid.minor = element_blank(),
         panel.background = element_rect(fill = 'white', colour = 'grey10'))
 
-fig.name <- paste0('xplrfig__', zone_name, '__TCI')
+fig.name <- paste0('fig___', zone_name, '_TCI')
 fig.path <- paste0('figures/xplor_figures/')
 dir.create(fig.path, showWarnings = F, recursive = T)
 fig.width <- 12; fig.height <- 9;  fig.fmt <- 'png'
