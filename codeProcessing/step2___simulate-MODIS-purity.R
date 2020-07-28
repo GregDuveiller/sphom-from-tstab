@@ -1,9 +1,12 @@
-sim_MODIS_purity = function(batch_name, TS2LC, spres){
+sim_MODIS_purity = function(batch_name, TS2LC, spres, platform, lat){
   # step2___simulate-MODIS-purity.R
   #
   # Step 2 in spHomogeneity simulation: simulating how the MODIS instruments
   # samples the synthetic landscape. This involves modelling the MODIS spatial
   # response and using it to generate so-called "pixel purity maps"
+  #
+  #
+  # For now, lat >= 0, otherwise the naming will be compromised
   
   require(raster)
   
@@ -43,9 +46,9 @@ sim_MODIS_purity = function(batch_name, TS2LC, spres){
   # get the PSF model needed to generate purity maps
   source('codeProcessing/MODIS_PSF_simulator.R')
   
-  # configure the PSF
-  platform <- 'AQUA' # --> for AQUA... N.B. should also do for TERRA
-  lat <- 48   # Latitude...  we could eventually change this parameter (only use positive numbers)
+  # # configure the PSF
+  # platform <- 'AQUA' # --> for AQUA... N.B. should also do for TERRA
+  # lat <- 48   # Latitude...  we could eventually change this parameter (only use positive numbers)
   
   # make the PSF models for all angles/
   list_PSF <- list()

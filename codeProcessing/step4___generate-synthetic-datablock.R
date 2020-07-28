@@ -1,4 +1,4 @@
-gen_syn_datablock = function(batch_name, psf_fname, TS2LC){
+gen_syn_datablock = function(batch_name, psf_fname, TS2LC, spat_perturb = NULL, ndvi_noise = 0){
   # step4___generate-synthetic-datablock.R
   #
   # Step 4 in spHomogeneity simulation: assigning phenology and convolving 
@@ -13,11 +13,11 @@ gen_syn_datablock = function(batch_name, psf_fname, TS2LC){
   # LC0 <- 'TS7'
   
   
-  # set some NDVI noise to make things more realistic
-  ndvi_noise <- 0 #  Not sure still if we need it
+  # # set some NDVI noise to make things more realistic
+  # ndvi_noise <- 0.01 #  Not sure still if we need it
   
-  # for now, we set the spatial perturbation to 0
-  spat_perturb <- NULL
+  # # for now, we set the spatial perturbation to 0
+  # spat_perturb <- NULL
   
   # load PSF
   load(paste0('dataProcessing/', batch_name, '/', psf_fname, '.Rda')) # list_PSF
@@ -79,7 +79,7 @@ gen_syn_datablock = function(batch_name, psf_fname, TS2LC){
     # apply convolution
     conv <- focal(ri + rn, list_PSF[[angi]], pad = T, padValue = mean(vals))
     
-    # pertrub grid (to simulate position uncertainty)
+    # perturb grid (to simulate position uncertainty)
     if(!is.null(spat_perturb)){
       rho <- rnorm(1, 0, 50/spres)   # division by 'spres' needed to keep units
       theta <- runif(1, 0, 2*pi)

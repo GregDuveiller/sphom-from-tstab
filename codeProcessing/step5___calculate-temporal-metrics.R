@@ -1,4 +1,4 @@
-calc_temp_metrics = function(batch_name, psf_fname, TS2LC){
+calc_temp_metrics = function(batch_name, TS2LC, temp_subsample = NULL){
 # step5___calculate-temporal-metrics.R
 #
 # Step 5 in spHomogeneity simulation: calculating temporal metrics 
@@ -6,70 +6,63 @@ calc_temp_metrics = function(batch_name, psf_fname, TS2LC){
 
 require(dplyr)
 require(tidyr)
-require(purrr)
-require(entropy)
-  
-# psf_fname <- 'PSF-AQUA-48-10'
-# LC1 <- 'TS1'
-# LC0 <- 'TS4'
 
-# load target dataset
+
+# load target datasets
 load(paste0('dataProcessing/', batch_name, 
             '/datablock-', paste(TS2LC, collapse = '-'),
-            '___', psf_fname, '.Rda'))  # 'df.all' & 'df.grd'
+            '___', 'PSF-AQUA-48-20', '.Rda'))  # 'df.all' & 'df.grd'
+df.all.AQUA <- df.all
+df.grd.AQUA <- df.grd
+
+load(paste0('dataProcessing/', batch_name, 
+            '/datablock-', paste(TS2LC, collapse = '-'),
+            '___', 'PSF-TERRA-48-20', '.Rda'))  # 'df.all' & 'df.grd'
+df.all.TERRA <- df.all
+df.grd.TERRA <- df.grd
+
+# combine them
+df.all <- bind_rows(
+  df.all.TERRA %>% mutate(DOI.time = DOI + 10.5/24, platform = 'TERRA'),
+  df.all.AQUA %>% mutate(DOI.time = DOI + 13.5/24, platform = 'AQUA')
+  )
+  
 
 
 # load('dataProcessing/landscape-2LC-id42___datablock-TS1-TS2-0.01___PSF-AQUA-48-10.Rda')
 
-load(paste0('dataProcessing/', batch_name, '/df-ideal-ts.Rda'))  # df.ideal.ts
-doi_vctr <- df.ideal.ts$DOI
-temp_subsample <- NULL
+doi_vctr <- unique(df.all$DOI.time)
+
 # should set.seed to simulate frequency of image acquisition
 if(!is.null(temp_subsample)){
   set.seed(42)
-  doi_vctr_sub <- sort(sample(doi_vctr, length(doi_vctr)/4, replace = F))
+  doi_vctr_sub <- sort(sample(doi_vctr, length(doi_vctr)/temp_subsample, replace = F))
 } else {doi_vctr_sub <- doi_vctr}
 
+df.all <- df.all %>%
+  filter(DOI.time %in% doi_vctr_sub)
+
+save(list = c('df.all','df.grd'), 
+     file = paste0('dataProcessing/', batch_name,
+                   '/datablock-combined-', paste(TS2LC, collapse = '-'),
+                   '___tsub-', temp_subsample, '.Rda'))
 
 
 
-source('codeProcessing/calc_dbldiffres.R')
+
+source('codeProcessing/calc_TCI.R')
+
+df.sum <- df.all %>%
+  group_by(grd_id) %>%
+  summarize(pur_avg = mean(maxPur),
+            pur_std = sd(maxPur),
+            TCI = calc_TCI(NDVI, DOI.time)) %>%
+  left_join(df.grd, by = 'grd_id')
 
 
-pb <- txtProgressBar(min = 0, max = max(df.all$grd_id), initial = 0)
-df.sum <- data.frame(NULL)
-for(iGrd in unique(df.all$grd_id)){
-  
-  df.1 <- df.all %>% 
-    filter(grd_id %in% iGrd, DOI %in% doi_vctr_sub) %>%
-    filter(!is.na(NDVI)) %>%    # for some reason, sometimes we have some
-    mutate(dbldif.res = c(NA, calc_dbldiffres(NDVI, DOI), NA)) %>%
-    filter(!is.na(dbldif.res))        # To remove the padding NAs 
-
-  df.sum <- df.1 %>%
-    summarise(grd_id = iGrd,
-              # pur_avg = mean(Purity),
-              # pur_std = sd(Purity),
-              std_res = sd(dbldif.res),
-              entropy_gaussian = log(std_res) + log(2 * pi * exp(1))/2,
-              # entropy_gaussian = 0.5 * log(2 * pi * exp(1) * std_res^2),
-              TCI_prototype_01 = log(std_res)/log(0.01),
-              TCI_prototype_02 = log(std_res)/log(0.001),
-              TCI_prototype_03 = entropy_gaussian/(log(0.01) + log(2 * pi * exp(1))/2),
-              TCI_prototype_04 = 1 - exp(-entropy_gaussian)) 
-  
-  setTxtProgressBar(pb, iGrd)
-}
-
-
-df.sum <- df.sum %>% 
-  left_join(df.grd, by = 'grd_id') # add grid info
-
-close(pb)
 
 # save outputs
 save('df.sum', 
      file = paste0('dataProcessing/', batch_name,
-                   '/metrics-', paste(TS2LC, collapse = '-'),
-                   '___', psf_fname, '.Rda'))
+                   '/metrics-', paste(TS2LC, collapse = '-'), '.Rda'))
 }
