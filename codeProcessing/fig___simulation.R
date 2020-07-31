@@ -1,6 +1,7 @@
 library(ggplot2)
 library(ggrepel)
 library(dplyr)
+library(tidyr)
 library(scales)
 library(grid)
 library(here)
@@ -34,9 +35,10 @@ df.sum <- df.sum %>%
 col.0 <- 'grey20'
 require(wesanderson)
 cols <- wes_palette(name = 'Darjeeling1', n = 4)
+cols <- wes_palette(name = 'Chevalier1', n = 4)
 
-require(RColorBrewer)
-cols <- rev(brewer.pal(n = 4, name = 'Paired'))
+# require(RColorBrewer)
+# cols <- rev(brewer.pal(n = 4, name = 'Paired'))
 col.vals <- c('1' = cols[1], '2' = cols[2],
               '3' = cols[3], '4' = cols[4])
 col.1 <- '#1770DC'
@@ -67,7 +69,7 @@ g.pheno <- ggplot(df.ts, aes(x = DOI, y = NDVI)) +
   geom_line(aes(colour = original_id), size = 1.2) +
   scale_colour_manual(values = col.vals, guide = 'none') + 
   scale_y_continuous('NDVI') +
-  scale_x_continuous('Day of the year (DOI)') +
+  scale_x_continuous('Day of the year (DOY)') +
   ggtitle('Land cover phenology') +
   theme(          panel.grid = element_line(linetype = 'dotted', colour = 'grey50'),
                   panel.grid.minor = element_blank(),
@@ -96,8 +98,8 @@ mk.ts <- function(df, df.pixList, pixLabel, ylim = NULL, xlim = NULL, lgd.pos = 
   
   g <- ggplot(df %>% filter(grd_id == df.pix$grd_id), 
               aes(x = DOI.time, y = NDVI)) +
-    geom_point(aes(x = DOI.time, y = NDVI, colour = platform, shape = platform)) +
-    scale_x_continuous('Day of the year (DOI)') +
+    geom_point(aes(x = DOI.time, y = NDVI, colour = platform, shape = platform), size = 3) +
+    scale_x_continuous('Day of the year (DOY)') +
     scale_colour_manual('Satellite platform:',
                         values = c('AQUA' = col.1, 'TERRA' = col.2)) +
     scale_shape_discrete('Satellite platform:') +
@@ -137,9 +139,6 @@ mk.plot <- function(df, y, x, ylim = NULL, xlim = NULL, pts2add = NULL){
     g <- g +  
       geom_label_repel(data = pts2add, aes_string(x = x, y = y, label = 'pixLbl'),
                        size = 4, fontface = 'bold', colour = 'black') + 
-      # geom_label(data = pts2add, aes(x = x, y = y, label = pixLbl),
-      #            size = 4, fontface = 'bold', colour = 'black', 
-      #            label.r = unit(0, "lines")) + 
       geom_point(data = pts2add, aes_string(x = x, y = y),
                  colour = 'black', shape = 3, size = 4) 
   }
@@ -151,7 +150,7 @@ mk.plot <- function(df, y, x, ylim = NULL, xlim = NULL, pts2add = NULL){
   return(g)
 }
 
-plt.mxpur <- mk.plot(df.sum, y = 'PI1', x = 'TCI', ylim = c(0.4, 1), pts2add = df.pixList)
+plt.mxpur <- mk.plot(df.sum, y = 'PI1', x = 'TCI', ylim = c(0.4, 1),  pts2add = df.pixList)
 plt.sdpur <- mk.plot(df.sum, y = 'PI2', x = 'TCI', ylim = c(0, 0.25), pts2add = df.pixList)
 plt.purLN <- mk.plot(df.sum, y = 'PI3', x = 'TCI', ylim = c(1, 3.55), pts2add = df.pixList)
 

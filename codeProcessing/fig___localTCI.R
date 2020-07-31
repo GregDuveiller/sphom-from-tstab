@@ -88,7 +88,7 @@ df.ts <- dat %>%
   filter(!is.na(NDVI)) %>%
   inner_join(iPixies, by = 'pixID') %>% 
   left_join(dat.sum, by = c('lat', 'lon', 'pixID')) %>%
-  mutate(pixLbl_long = paste('Pixel', pixLbl, '|', 
+  mutate(pixLbl_long = paste('Time series', pixLbl, '|', 
                              'TCI =', round(TCI, digits = 3)))
 
 df.pixList <- iPixies %>% 
@@ -110,7 +110,7 @@ g.map.TCI <- ggplot(dat.sum) +
   # geom_label(data = df.ts, aes(x = lon, y = lat, label = pixLbl),
   #            size = 4, fontface = 'bold', colour = 'black', label.r = unit(0, "lines")) +
   coord_cartesian() +
-  scale_fill_viridis_c('Temporal Coherence index (TCI)', option = 'B', limits = c(0,1)) +
+  scale_fill_viridis_c('Temporal Coherence Index (TCI)', option = 'magma', limits = c(0,1)) +
   theme(legend.position = 'top',
         legend.key.width = unit(2, "cm"),
         panel.background = element_rect(fill = 'white'),

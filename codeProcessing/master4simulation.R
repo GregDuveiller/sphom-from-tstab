@@ -20,15 +20,15 @@ dir.create(path = paste0('dataProcessing/',batch_name,'/'),
            showWarnings = F, recursive = T)
 
 
-# source('codeProcessing/step1___generate-synthetic-landscape.R')
-# gen_syn_landscape(batch_name, landscape_seed = 42, TS2LC)
-# 
-# source('codeProcessing/step2___simulate-MODIS-purity.R')
-# sim_MODIS_purity(batch_name, TS2LC, spres = 100, platform = 'TERRA', lat = 48)
-# sim_MODIS_purity(batch_name, TS2LC, spres = 100, platform = 'AQUA', lat = 48)
-# 
-# 
-# source('codeProcessing/step3___simulate-temporal-behaviour.R')
+source('codeProcessing/step1___generate-synthetic-landscape.R')
+gen_syn_landscape(batch_name, landscape_seed = 42, TS2LC)
+
+source('codeProcessing/step2___simulate-MODIS-purity.R')
+sim_MODIS_purity(batch_name, TS2LC, spres = 100, platform = 'TERRA', lat = 48)
+sim_MODIS_purity(batch_name, TS2LC, spres = 100, platform = 'AQUA', lat = 48)
+
+
+source('codeProcessing/step3___simulate-temporal-behaviour.R')
 
 
 source('codeProcessing/step4___generate-synthetic-datablock.R')

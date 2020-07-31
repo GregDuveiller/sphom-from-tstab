@@ -5,7 +5,7 @@ MODIS_PSF_simulator = function(v0, delta, Lat, ScanAngle, Platform, optsigma){
 # % Inputs: 
 # %   * v0 = nominal spatial resolution of MODIS pixels in meters
 # %   * delta = discretization of the resulting PSF model 
-#               i.e. size (in meters of the pixels of the PSF)
+# %             i.e. size (in meters of the pixels of the PSF)
 # %   * Lat = latitude in decimal degrees 
 # %   * ScanAngle = Scan Angle of the satellite in decimal degrees... 
 # %             ! it is different from View zenith angle which can be larger due 
