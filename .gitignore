@@ -4,11 +4,6 @@
 .Ruserdata
 .DS_Store
 \dataProcessing
-\dataResults
-\dataFigures
-\textFigures
-\textNotebooks
-\xplrFigures
-\figures
-\product
 \data
+\docs
+\__devel__

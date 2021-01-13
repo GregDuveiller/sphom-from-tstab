@@ -34,7 +34,7 @@ TS4 <- c(TS1[(temp_shift+1):365], TS1[1:temp_shift])
 TS5 <- TS1 + 0.1 
 
 # scaling
-TS6 <- TS1/2
+TS6 <- (TS1/2) + 0.1
 
 # flat signal high
 TS7 <- rep(0.6, times = length(doi_vctr))
@@ -49,7 +49,7 @@ TS9 <- TS6 + 0.4
 df.ideal.ts <- data.frame(DOI = doi_vctr, TS1, TS2, TS3, TS4, TS5, TS6, TS7, TS8, TS9) 
 
 save('df.ideal.ts', 
-     file = paste0('dataProcessing/', batch_name, '/df-ideal-ts.Rda'))
+     file = paste0('data/inter_data/', batch_name, '/df-ideal-ts.Rda'))
 
 
 
@@ -59,7 +59,7 @@ g <- ggplot(df.ideal.ts %>%
   scale_color_viridis_d()
 
 ggsave(filename = 'test_profiles.png', plot = g, 
-       path = paste0('dataProcessing/', batch_name, '/'),
+       path = paste0('data/inter_data/', batch_name, '/'),
        width = 7, height = 5)
 
 
