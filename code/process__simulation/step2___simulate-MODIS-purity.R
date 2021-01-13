@@ -1,3 +1,14 @@
+#!/usr/local/bin/Rscript
+################################################################################
+# Project:  spHomogeneity
+# Purpose:  Function to simulate how the MODIS instruments samples the synthetic
+#           landscape. This involves modelling the MODIS spatial response and 
+#           using it to generate so-called "pixel purity maps"
+#           (STEP 2 in simulation exercise)
+# License:  GPL v3
+# Authors:  Gregory Duveiller - Jul 2020
+################################################################################
+
 sim_MODIS_purity = function(batch_name, TS2LC, spres, platform, lat){
   # step2___simulate-MODIS-purity.R
   #
@@ -11,7 +22,7 @@ sim_MODIS_purity = function(batch_name, TS2LC, spres, platform, lat){
   require(raster)
   
   # load raster dataset
-  r <- raster(paste0('dataProcessing/', batch_name,'/map'))
+  r <- raster(paste0('data/inter_data/', batch_name,'/map'))
   
   # # defining the spatial resolution of the initial pixels in meters
   # spres <- 100 
@@ -44,7 +55,7 @@ sim_MODIS_purity = function(batch_name, TS2LC, spres, platform, lat){
   
   
   # get the PSF model needed to generate purity maps
-  source('codeProcessing/MODIS_PSF_simulator.R')
+  source('code/process__simulation/MODIS_PSF_simulator.R')
   
   # # configure the PSF
   # platform <- 'AQUA' # --> for AQUA... N.B. should also do for TERRA
@@ -59,15 +70,15 @@ sim_MODIS_purity = function(batch_name, TS2LC, spres, platform, lat){
                                    Platform = platform, 
                                    optsigma = 30)
     dum.psf <- round(dum.psf, digits = 6)
-    if(dim(dum.psf)[1]%%2 == 0) dum.psf <- rbind(dum.psf,0) # add row of zeros if not odd number of rows
-    if(dim(dum.psf)[2]%%2 == 0) dum.psf <- cbind(dum.psf,0) # add col of zeros if not odd number of cols
+    if(dim(dum.psf)[1]%%2 == 0) dum.psf <- rbind(dum.psf, 0) # add row of zeros if not odd number of rows
+    if(dim(dum.psf)[2]%%2 == 0) dum.psf <- cbind(dum.psf, 0) # add col of zeros if not odd number of cols
     # save('dum.psf',file=paste0(wpath,'dataMid/SynTest/',paste('PSF','.AQUA.angleNum.',which(ang==scanangle),'.RData',sep='')))
     list_PSF[[i]] <- dum.psf
   }
   
   psf_fname <- paste('PSF', platform, lat, MODsc, sep = '-')
   save('list_PSF',  
-       file = paste0('dataProcessing/', batch_name, '/', psf_fname, '.Rda'))
+       file = paste0('data/inter_data/', batch_name, '/', psf_fname, '.Rda'))
   
   for(iLC in names(TS2LC)){
     
@@ -89,7 +100,7 @@ sim_MODIS_purity = function(batch_name, TS2LC, spres, platform, lat){
     
     brick_fname <- paste0(iLC,'-purity-', psf_fname)
     writeRaster(x = purity_stack,  overwrite = TRUE,
-                filename = paste0('dataProcessing/', batch_name, '/', brick_fname, '.grd'))
+                filename = paste0('data/inter_data/', batch_name, '/', brick_fname, '.grd'))
     
   }
 }

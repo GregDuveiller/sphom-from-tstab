@@ -2,7 +2,7 @@
 ################################################################################
 # Project:  spHomogeneity
 # Purpose:  Function to generate the spatial patterns of the synthetic landscape
-#           (STEP 1 in simulatipn exercise)
+#           (STEP 1 in simulation exercise)
 # License:  GPL v3
 # Authors:  Gregory Duveiller - Jul 2020
 ################################################################################
