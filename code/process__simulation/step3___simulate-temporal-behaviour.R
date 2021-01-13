@@ -1,6 +1,12 @@
-# step3___simulate-temporal-behaviour.R
-#
-# Step 3 in spHomogeneity simulation: define the prescribed NDVI curves
+#!/usr/local/bin/Rscript
+################################################################################
+# Project:  spHomogeneity
+# Purpose:  Function to the prescribed NDVI curves of different land covers
+#           (STEP 3 in simulation exercise)
+# License:  GPL v3
+# Authors:  Gregory Duveiller - Jul 2020
+################################################################################
+
 require(ggplot2)
 require(tidyr)
 require(dplyr)
@@ -62,38 +68,4 @@ ggsave(filename = 'test_profiles.png', plot = g,
        path = paste0('data/inter_data/', batch_name, '/'),
        width = 7, height = 5)
 
-
-
-
-# # OLD ONES
-#
-# TS1 <- glogf(doi_vctr, A = 0, K = 0.9, B = 0.1, Q = 1, v = 1, M = 80) -
-#   glogf(doi_vctr, A = 0, K = 0.9, B = 0.05, Q = 1, v = 1, M = 260)
-# 
-# TS2 <- glogf(doi_vctr, A = 0, K = 0.7, B = 0.05, Q = 1, v = 1, M = 60) -
-#   glogf(doi_vctr, A = 0, K = 0.7, B = 0.025, Q = 1, v = 1, M = 240)
-# 
-# TS3 <- glogf(doi_vctr, A = 0, K = 0.85, B = 0.09, Q = 1, v = 1, M = 90) -
-#   glogf(doi_vctr, A = 0, K = 0.85, B = 0.05, Q = 1, v = 1, M = 280)
-# 
-# TS4 <- glogf(doi_vctr, A = 0, K = 3.2, B = 0.005, Q = 1, v = 1, M = 80) -
-#   glogf(doi_vctr, A = 0, K = 3.2, B = 0.005, Q = 1, v = 1, M = 260)
-# 
-# TS5 <- glogf(doi_vctr, A = 0, K = 0.9, B = 0.1, Q = 1, v = 1, M = 140) -
-#   glogf(doi_vctr, A = 0, K = 0.9, B = 0.05, Q = 1, v = 1, M = 320)
-# 
-# TS6 <- glogf(doi_vctr, A = 0, K = 0.5, B = 0.1, Q = 1, v = 1, M = 80) -
-#   glogf(doi_vctr, A = 0, K = 0.5, B = 0.05, Q = 1, v = 1, M = 260)
-# 
-# TS7 <- glogf(doi_vctr, A = 0, K = 0.7, B = 0.05, Q = 1, v = 1, M = 120) -
-#   glogf(doi_vctr, A = 0, K = 0.7, B = 0.025, Q = 1, v = 1, M = 300)
-# 
-# TS8 <- TS4 + 0.2
-# 
-# TS9 <- glogf(doi_vctr, A = 0, K = 0.9, B = 0.1, Q = 1, v = 1, M = 200) -
-#   glogf(doi_vctr, A = 0, K = 0.9, B = 0.05, Q = 1, v = 1, M = 380)
-# 
-# 
-# df.ideal.ts <- data.frame(DOI = doi_vctr, TS1, TS2, TS3, TS4, TS5, TS6, TS7, TS8, TS9)
-# save('df.ideal.ts', file = 'dataProcessing/df-ideal-ts.Rda')
 

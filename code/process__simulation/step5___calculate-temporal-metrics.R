@@ -1,3 +1,13 @@
+#!/usr/local/bin/Rscript
+################################################################################
+# Project:  spHomogeneity
+# Purpose:  Function to calculate the TCI index on the simulated time series
+#           (STEP 5 in simulation exercise)
+# License:  GPL v3
+# Authors:  Gregory Duveiller - Jul 2020
+################################################################################
+
+
 calc_temp_metrics = function(batch_name, TS2LC, temp_subsample = NULL){
 # step5___calculate-temporal-metrics.R
 #
@@ -9,13 +19,13 @@ require(tidyr)
 
 
 # load target datasets
-load(paste0('dataProcessing/', batch_name, 
+load(paste0('data/inter_data/', batch_name, 
             '/datablock-', paste(TS2LC, collapse = '-'),
             '___', 'PSF-AQUA-48-20', '.Rda'))  # 'df.all' & 'df.grd'
 df.all.AQUA <- df.all
 df.grd.AQUA <- df.grd
 
-load(paste0('dataProcessing/', batch_name, 
+load(paste0('data/inter_data/', batch_name, 
             '/datablock-', paste(TS2LC, collapse = '-'),
             '___', 'PSF-TERRA-48-20', '.Rda'))  # 'df.all' & 'df.grd'
 df.all.TERRA <- df.all
@@ -29,7 +39,7 @@ df.all <- bind_rows(
   
 
 
-# load('dataProcessing/landscape-2LC-id42___datablock-TS1-TS2-0.01___PSF-AQUA-48-10.Rda')
+# load('data/inter_data/landscape-2LC-id42___datablock-TS1-TS2-0.01___PSF-AQUA-48-10.Rda')
 
 doi_vctr <- unique(df.all$DOI.time)
 
@@ -43,14 +53,14 @@ df.all <- df.all %>%
   filter(DOI.time %in% doi_vctr_sub)
 
 save(list = c('df.all','df.grd'), 
-     file = paste0('dataProcessing/', batch_name,
+     file = paste0('data/inter_data/', batch_name,
                    '/datablock-combined-', paste(TS2LC, collapse = '-'),
                    '___tsub-', temp_subsample, '.Rda'))
 
 
 
 
-source('codeProcessing/calc_TCI.R')
+source('code/general/calc_TCI.R')
 
 df.sum <- df.all %>%
   group_by(grd_id) %>%
@@ -63,6 +73,6 @@ df.sum <- df.all %>%
 
 # save outputs
 save('df.sum', 
-     file = paste0('dataProcessing/', batch_name,
+     file = paste0('data/inter_data/', batch_name,
                    '/metrics-', paste(TS2LC, collapse = '-'), '.Rda'))
 }

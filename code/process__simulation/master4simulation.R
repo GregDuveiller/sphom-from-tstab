@@ -27,10 +27,10 @@ sim_MODIS_purity(batch_name, TS2LC, spres = 100, platform = 'TERRA', lat = 48)
 sim_MODIS_purity(batch_name, TS2LC, spres = 100, platform = 'AQUA', lat = 48)
 
 # define idealized temporal behaviours
-source('codeProcessing/step3___simulate-temporal-behaviour.R')
+source('code/process__simulation/step3___simulate-temporal-behaviour.R')
 
 # generate the synthethic data blocks
-source('codeProcessing/step4___generate-synthetic-datablock.R')
+source('code/process__simulation/step4___generate-synthetic-datablock.R')
 gen_syn_datablock(batch_name = batch_name,
                   psf_fname = 'PSF-TERRA-48-20', 
                   TS2LC = TS2LC, 
@@ -43,7 +43,7 @@ gen_syn_datablock(batch_name = batch_name,
                   ndvi_noise = 0.01)
 
 # calculate the desired metrics
-source('codeProcessing/step5___calculate-temporal-metrics.R')
+source('code/process__simulation/step5___calculate-temporal-metrics.R')
 calc_temp_metrics(batch_name = batch_name,
                   TS2LC = TS2LC, 
-                  temp_subsample = 5)
+                  temp_subsample = 4)

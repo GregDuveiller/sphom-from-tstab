@@ -1,8 +1,15 @@
+#!/usr/local/bin/Rscript
+################################################################################
+# Project:  spHomogeneity
+# Purpose:  Function to assign the prescribed NDVI phenology to the land cover
+#           classes and then convolve it with the MODIS spatial response
+#           (STEP 4 in simulation exercise)
+# License:  GPL v3
+# Authors:  Gregory Duveiller - Jul 2020
+################################################################################
+
 gen_syn_datablock = function(batch_name, psf_fname, TS2LC, spat_perturb = NULL, ndvi_noise = 0){
-  # step4___generate-synthetic-datablock.R
-  #
-  # Step 4 in spHomogeneity simulation: assigning phenology and convolving 
-  
+
   require(raster)
   require(dplyr)
   
@@ -20,14 +27,14 @@ gen_syn_datablock = function(batch_name, psf_fname, TS2LC, spat_perturb = NULL, 
   # spat_perturb <- NULL
   
   # load PSF
-  load(paste0('dataProcessing/', batch_name, '/', psf_fname, '.Rda')) # list_PSF
+  load(paste0('data/inter_data/', batch_name, '/', psf_fname, '.Rda')) # list_PSF
   
   # load purity raster
-  purity_stack <- brick(x = paste0('dataProcessing/', batch_name, '/', 
+  purity_stack <- brick(x = paste0('data/inter_data/', batch_name, '/', 
                                    'LC1-purity-', psf_fname))
   
   # load original raster
-  r <- raster(x = paste0('dataProcessing/', batch_name, '/map'))
+  r <- raster(x = paste0('data/inter_data/', batch_name, '/map'))
   
   # get spatial reso of original pixels
   spres <- as.numeric(strsplit(psf_fname, split = '-')[[1]][4])/res(r)[1]
@@ -48,7 +55,7 @@ gen_syn_datablock = function(batch_name, psf_fname, TS2LC, spat_perturb = NULL, 
   
   
   # load prescribed NDVI curves
-  load(paste0('dataProcessing/', batch_name, '/df-ideal-ts.Rda'))  # 'df.ideal.ts'
+  load(paste0('data/inter_data/', batch_name, '/df-ideal-ts.Rda'))  # 'df.ideal.ts'
   doi_vctr <- df.ideal.ts$DOI
   
   # # assign TS to LC
@@ -94,7 +101,7 @@ gen_syn_datablock = function(batch_name, psf_fname, TS2LC, spat_perturb = NULL, 
     purities <- NULL
     for(iLC in names(TS2LC)){
       
-      purity_stack <- brick(x = paste0('dataProcessing/', batch_name, '/', 
+      purity_stack <- brick(x = paste0('data/inter_data/', batch_name, '/', 
                                        iLC,'-purity-', psf_fname))
       
       purity <- raster::extract(purity_stack[[angi]], grdi)
@@ -123,26 +130,11 @@ gen_syn_datablock = function(batch_name, psf_fname, TS2LC, spat_perturb = NULL, 
     df.all <- do.call('rbind', list_temp)
   }
   
-  
-  # df.sum <- df.all %>% 
-  #   bind_cols(grd) %>%
-  #   mutate(original_id = raster::extract(x = r, y = grd))
-  
+  # export
   save(list = c('df.all','df.grd'), 
-       file = paste0('dataProcessing/', batch_name, 
+       file = paste0('data/inter_data/', batch_name, 
                      '/datablock-', paste(TS2LC, collapse = '-'),
                      '___', psf_fname, '.Rda'))
   
   
 }
-
-# # quick and dirty plot
-# require(ggplot2)
-# doi_vctr_sub <- sort(sample(doi_vctr, length(doi_vctr)/4, replace = F))
-# ggplot(df.all %>% filter(grd_id %in% sample(dim(grd)[1], size = 5),
-#                          DOI %in% doi_vctr_sub)) + 
-#   geom_point(aes(x = DOI, y = NDVI, colour = Purity, shape = factor(grd_id))) +
-#   geom_line(data = df.ideal.ts, aes(x = DOI, y = TS1), colour = 'cornflowerblue') +
-#   geom_line(data = df.ideal.ts, aes(x = DOI, y = TS2), colour = 'grey10') +
-#   scale_colour_continuous('Purity of TS1', limits = c(0,1))
-
