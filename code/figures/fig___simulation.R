@@ -51,14 +51,21 @@ col.1 <- '#1770DC'
 col.2 <- '#DCA416'
 
 # defining which time series to show...
-df.pixList <- data.frame(pixLbl = c('A','B','C'),
-                         grd_id = c(
-                           #which.max(df.sum$TCI), 
-                           #which.min(df.sum$TCI),
-                           which.min(abs(df.sum$TCI-quantile(df.sum$TCI, 0.9, na.rm = T))),
-                           which.min(abs(df.sum$TCI-quantile(df.sum$TCI, 0.5, na.rm = T))),
-                           which.min(abs(df.sum$TCI-quantile(df.sum$TCI, 0.1, na.rm = T)))
-                         )) %>% 
+
+qtls <- df.sum %>% 
+  group_by(original_id) %>% 
+  summarize(q90 = quantile(TCI, 0.95, na.rm = T),
+            q50 = quantile(TCI, 0.50 , na.rm = T),
+            q10 = quantile(TCI, 0.05 , na.rm = T),
+            c90 = grd_id[order(abs(TCI - q90))[1]],
+            c50 = grd_id[order(abs(TCI - q50))[1]],
+            c10 = grd_id[order(abs(TCI - q10))[1]])
+
+main_ts_id <- 1
+
+pix2plot <- as.numeric(filter(qtls, original_id == main_ts_id)[c('c90', 'c50', 'c10')])
+
+df.pixList <- data.frame(pixLbl = c('A','B','C'), grd_id = pix2plot) %>% 
   left_join(df.sum, by = 'grd_id')
 
 
@@ -252,4 +259,4 @@ grid.text(expression(bold("i")), x = unit(0.51, "npc"), y = unit(0.49, "npc"), g
 grid.text(expression(bold("l")), x = unit(0.51, "npc"), y = unit(0.23, "npc"), gp = gpar(fontsize = 18))
 
 dev.off()
- 
+  
