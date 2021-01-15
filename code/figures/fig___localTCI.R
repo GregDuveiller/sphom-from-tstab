@@ -1,65 +1,31 @@
-require(readr)
+#!/usr/local/bin/Rscript
+################################################################################
+# Project:  spHomogeneity
+# Purpose:  make figure showing the local example
+# License:  GPL v3
+# Authors:  Gregory Duveiller - Jan 2021
+################################################################################
+
+
 require(ggplot2)
 require(dplyr)
+require(raster)
+require(ggplotify)
+require(grid)
+require(ggrepel)
+
 
 zone_name <- 'vercelli_2018'
 # zone_name <- 'beauce_2019'
 # zone_name <- 'hyytiala_2018'
 # zone_name <- 'fresno_2019'
 
-dpath <- paste0('data/inter_data/from_GEE/testzones_', zone_name)
 
-
-dat1 <- read_csv(file = paste0(dpath,'/MODIS_AQUA_NDVI_datablock.csv'), col_names = T, skip = 1)
-dat2 <- read_csv(file = paste0(dpath,'/MODIS_TERRA_NDVI_datablock.csv'), col_names = T, skip = 1)
-
-
-source('code/general/calc_TCI.R')
-
-dir.create(path = paste0('data/inter_data/modis_test_zones/', zone_name), 
-           recursive = T, showWarnings = F)
-
-# read the data
-dat <- bind_rows(
-  dat1 %>% 
-    dplyr::select(-X7, -time) %>% 
-    rename(ID = `0`, date = 'id') %>% 
-    mutate(platform = 'AQUA'),
-  dat2 %>% 
-    dplyr::select(-X7, -time) %>% 
-    rename(ID = `0`, date = 'id') %>% 
-    mutate(platform = 'TERRA')) %>%
-  rename(lon = 'longitude', lat = 'latitude')  %>% 
-  mutate(date = as.Date(date, '%Y_%m_%d')) %>%
-  group_by(date, platform) %>%
-  mutate(pixID = row_number())
-
-
-# Quickplot to check if the data comes out right
-ggplot(dat %>% filter(platform == 'TERRA', date == '2018-05-05')) +
-  geom_point(aes(x = lon, y = lat, fill = NDVI),
-             shape = 22, size = 4) +
-  scale_fill_viridis_c()
-
-
-# calc the metrics per time series
-dat.sum <- dat %>% 
-  filter(!is.na(NDVI)) %>% 
-  group_by(pixID) %>%
-  mutate(DOI = as.numeric(strftime(date, format = "%j")),
-         DOI.hour = DOI + ifelse(platform == 'TERRA', 10.5/24, 13.5/24)) %>%
-  group_by(pixID, lat, lon) %>%
-  arrange(DOI.hour) %>%
-  summarise(TCI = calc_TCI(NDVI, DOI.hour))
+# load dat.sum... 
+load(paste0('data/final_data/data4figures/df_MODIS_', zone_name, '.RData')) # <---'dat.sum'
 
 
 
-## FIGURE
-
-require(raster)
-require(ggplotify)
-require(grid)
-require(ggrepel)
 
 col.1 <- '#1770DC'
 col.2 <- '#DCA416'
