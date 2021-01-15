@@ -7,16 +7,16 @@ zone_name <- 'vercelli_2018'
 # zone_name <- 'hyytiala_2018'
 # zone_name <- 'fresno_2019'
 
-dpath <- paste0('../../../Google Drive/spHomogeneity_testzones_', zone_name)
+dpath <- paste0('data/inter_data/from_GEE/testzones_', zone_name)
 
 
 dat1 <- read_csv(file = paste0(dpath,'/MODIS_AQUA_NDVI_datablock.csv'), col_names = T, skip = 1)
 dat2 <- read_csv(file = paste0(dpath,'/MODIS_TERRA_NDVI_datablock.csv'), col_names = T, skip = 1)
 
 
-source('codeProcessing/calc_TCI.R')
+source('code/general/calc_TCI.R')
 
-dir.create(path = paste0('data/inter/modis_test_zones/', zone_name), 
+dir.create(path = paste0('data/inter_data/modis_test_zones/', zone_name), 
            recursive = T, showWarnings = F)
 
 # read the data
@@ -36,7 +36,7 @@ dat <- bind_rows(
 
 
 # Quickplot to check if the data comes out right
-ggplot(dat %>% filter(platform == 'TERRA', date == '2019-09-05')) +
+ggplot(dat %>% filter(platform == 'TERRA', date == '2018-05-05')) +
   geom_point(aes(x = lon, y = lat, fill = NDVI),
              shape = 22, size = 4) +
   scale_fill_viridis_c()

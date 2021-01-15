@@ -6,6 +6,7 @@
 # Authors:  Gregory Duveiller - Jan 2021
 ################################################################################
 
+
 require(ggplot2)
 require(ggrepel)
 require(dplyr)
@@ -14,6 +15,14 @@ require(scales)
 require(grid)
 require(here)
 
+
+# default settings for printing
+if(!exists('fig.fmt')){fig.fmt = 'png'}
+if(!exists('fig.path')){fig.path = 'docs/figures'}
+dir.create(path = fig.path, recursive = T, showWarnings = F)
+
+
+# set-up for choice of the dataset to print
 batch_name <- 'simulation_final'
 TS2LC <- c('LC1'='TS1', 'LC2'='TS8', 'LC3'='TS3', 'LC4'='TS6')
 temp_subsample <- 4
@@ -30,9 +39,7 @@ load(paste0('data/inter_data/', batch_name,
 
 load(paste0('data/inter_data/', batch_name, '/df-ideal-ts.Rda'))  # df.ideal.ts
 
-
 # rename columns and calc purity indices
-
 df.sum <- df.sum %>% 
   mutate(PI1 = pur_avg, PI2 = pur_std, PI3 = log(pur_avg/pur_std)) %>%
   dplyr::select(-pur_avg, -pur_std)

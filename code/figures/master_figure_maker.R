@@ -13,9 +13,21 @@ library(scales)
 library(here)
 
 
+# Set-up ---- 
+
+# (Re)Harvest the data for the figures?
+harvestData <- F
+
+# set printing properties (place and format)
 fig.fmt <- 'png'
-fig.path <- paste0('docs/article_Figures/', fig.fmt)
+fig.path <- paste0('docs/article_Figures')
 dir.create(fig.path, showWarnings = F, recursive = T)
 
 
+if(harvestData){
+  source('code/figures/harvest___vectors4figs.R')
+  source('code/figures/harvest___california-TCI-ts.R')
+}
+
 source('code/figures/fig___simulation.R')
+source('code/figures/fig___california-TCI-rs.R')
