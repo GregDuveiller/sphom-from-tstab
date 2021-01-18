@@ -10,7 +10,7 @@
 require(ggplot2)
 require(dplyr)
 require(raster)
-require(ggplotify)
+# require(ggplotify)
 require(grid)
 require(ggrepel)
 
@@ -20,102 +20,92 @@ zone_name <- 'vercelli_2018'
 # zone_name <- 'hyytiala_2018'
 # zone_name <- 'fresno_2019'
 
+# get S2 image
+S2_img <- brick(paste0(dpath,'/S2_L2A_image_', zone_name, '.tif'))
 
-# load dat.TCI... 
-load(paste0('data/final_data/data4figures/df_MODIS_', zone_name, '.RData')) # <---'dat.TCI', 'dat.ts'
-
+# load data to make figure 
+load(paste0('data/final_data/data4figures/df_MODIS_', zone_name, '.RData')) # <---'pts.TCI', 'dat.ts', 'point_tiles'
 
 
 col.1 <- '#1770DC'
 col.2 <- '#DCA416'
 
-S2_img <- brick(paste0(dpath,'/S2_L2A_image_', zone_name, '.tif'))
-g.rgb <- as.grob(~plotRGB(S2_img, r = 3, g = 2, b = 1, scale = 10000,
-                          stretch = "lin", margins = F))
-
-raster::image(x, rgb = c(3,2,1))
-
-
-library(stars)
-
-tif <- paste0(dpath,'/S2_L2A_image_', zone_name, '.tif')
-# read_stars(tif) -> x
-rasterio = list(nXOff = 6, nYOff = 6, nXSize = 100, nYSize = 100, bands = c(3, 2, 1))
-(x = read_stars(tif, RasterIO = rasterio))
-
-x %>% slice(band, 3) -> x3
-
-
-ndvi = function(x) (x[4] - x[1])/(x[4] + x[1])
-(s2.ndvi = st_apply(x, c("x", "y"), ndvi))
-x2 <- x %>% slice(rgb = S2_L2A_image_vercelli_2018.tif/1000) -> x2 
-
-
-library(ggplot2)
-ggplot() + geom_stars(data = x, aes(x=x, y=y, col = rgb(3,2,1))) +
-  coord_equal() +
-  facet_wrap(~band) +
-  scale_x_discrete(expand=c(0,0))+
-  scale_y_discrete(expand=c(0,0))
-
-x %>% slice(band, 6) -> x6
-
-g = ggplot() + 
-  coord_sf() + 
-  scale_fill_viridis_c() 
-
-g + geom_stars(data = x, downsample = c(10,10,1)) + 
-  facet_wrap(~band)
-
-
-
-df.grd <- dat.ts %>%  
-  filter(!is.na(NDVI)) %>%
-  group_by(pixID) %>% 
-  summarize(lat = mean(lat), lon = mean(lon))
-
 
 iPixies <- data.frame(pixLbl = c('A','B','C','D'),
                       pixID = c(
-                        which.max(dat.TCI$TCI), 
+                        which.max(pts.TCI$TCI), 
                         1000, 1200,
-                        # which.min(abs(dat.TCI$TCI-quantile(dat.TCI$TCI, 0.7))),
-                        # which.min(abs(dat.TCI$TCI-quantile(dat.TCI$TCI, 0.3))),
-                        which.min(dat.TCI$TCI))) 
+                        # which.min(abs(pts.TCI$TCI-quantile(pts.TCI$TCI, 0.7))),
+                        # which.min(abs(pts.TCI$TCI-quantile(pts.TCI$TCI, 0.3))),
+                        which.min(pts.TCI$TCI))) 
 
 
 
 df.ts <- dat.ts %>% 
   filter(!is.na(NDVI)) %>%
   inner_join(iPixies, by = 'pixID') %>% 
-  left_join(dat.TCI, by = c('lat', 'lon', 'pixID')) %>%
+  left_join(pts.TCI, by = c('pixID')) %>%
   mutate(pixLbl_long = paste('Time series', pixLbl, '|', 
                              'TCI =', round(TCI, digits = 3)))
 
 df.pixList <- iPixies %>% 
-  left_join(df.grd, by = 'pixID')
+  left_join(pts.TCI, by = c('pixID')) %>%
+  mutate(lon = st_coordinates(geometry)[,1],
+         lat = st_coordinates(geometry)[,2])
 
 
 
+
+
+
+
+
+## Panel with IMG ----
+
+library(RStoolbox)
+
+gIMG <- ggRGB(S2_img, r = 1, g = 2, b = 3, scale = 10000, stretch = "lin", coord_equal = T, ggLayer = T)
+
+
+
+g.map.img <-  ggplot(point_tiles) +
+  geom_sf(aes(colour = TCI), fill = NA) +
+  gIMG +
+  geom_label_repel(data = df.pixList, 
+                   aes(x = lon, y = lat, label = pixLbl),
+                   size = 4, fontface = 'bold', colour = 'white', fill = 'grey20') + 
+  geom_point(data = df.pixList, 
+             aes(x = lon, y = lat),
+             colour = 'white', shape = 3, size = 4) +
+  coord_sf(expand = F) +
+  scale_colour_viridis_c('Temporal Coherence Index (TCI)', option = 'magma', limits = c(0,1)) +
+  theme(legend.position = 'none',
+        legend.key.width = unit(2, "cm"),
+        panel.background = element_rect(fill = 'white'),
+        # axis.ticks = element_blank(),
+        # axis.text = element_blank(),
+        axis.title = element_blank()) +
+  guides(colour = guide_colorbar(title.position = 'top', title.hjust = 0.5))
+
+
+
+
+
+
+## panel with TCI ----
 
 g.map.TCI <- ggplot(point_tiles) +
   geom_sf(aes(fill = TCI, colour = TCI)) +
   geom_label_repel(data = df.pixList, 
                    aes(x = lon, y = lat, label = pixLbl),
-                   size = 4, fontface = 'bold', colour = 'black') + 
+                   size = 4, fontface = 'bold', colour = 'white', fill = 'grey20') + 
   geom_point(data = df.pixList, 
              aes(x = lon, y = lat),
-             colour = 'black', shape = 3, size = 4) +
-  # geom_point(aes(x = lon, y = lat, fill = pixID), 
-  #            shape = 22, size = 3, colour = 'grey80') + 
-  # geom_point(data = df.ts, aes(x = lon, y = lat), 
-  #            shape = 3, size = 2, colour = 'black') +
-  # geom_label(data = df.ts, aes(x = lon, y = lat, label = pixLbl),
-  #            size = 4, fontface = 'bold', colour = 'black', label.r = unit(0, "lines")) +
+             colour = 'white', shape = 3, size = 4) +
   coord_sf(expand = F) +
   scale_fill_viridis_c('Temporal Coherence Index (TCI)', option = 'magma', limits = c(0,1)) +
   scale_colour_viridis_c('Temporal Coherence Index (TCI)', option = 'magma', limits = c(0,1)) +
-  theme(legend.position = 'top',
+  theme(legend.position = 'bottom',
         legend.key.width = unit(2, "cm"),
         panel.background = element_rect(fill = 'white'),
         # axis.ticks = element_blank(),
@@ -124,32 +114,6 @@ g.map.TCI <- ggplot(point_tiles) +
   guides(fill = guide_colorbar(title.position = 'top', title.hjust = 0.5))
 
 
-# 
-# 
-# g.map.TCI <- ggplot(dat.TCI) +
-#   geom_point(aes(x = lon, y = lat, fill = TCI),
-#              shape = 22, size = 3, colour = 'grey80') +
-#   geom_label_repel(data = df.pixList, 
-#                    aes(x = lon, y = lat, label = pixLbl),
-#                    size = 4, fontface = 'bold', colour = 'black') + 
-#   geom_point(data = df.pixList, 
-#              aes(x = lon, y = lat),
-#              colour = 'black', shape = 3, size = 4) +
-#   # geom_point(aes(x = lon, y = lat, fill = pixID), 
-#   #            shape = 22, size = 3, colour = 'grey80') + 
-#   # geom_point(data = df.ts, aes(x = lon, y = lat), 
-#   #            shape = 3, size = 2, colour = 'black') +
-#   # geom_label(data = df.ts, aes(x = lon, y = lat, label = pixLbl),
-#   #            size = 4, fontface = 'bold', colour = 'black', label.r = unit(0, "lines")) +
-#   coord_cartesian() +
-#   scale_fill_viridis_c('Temporal Coherence Index (TCI)', option = 'magma', limits = c(0,1)) +
-#   theme(legend.position = 'top',
-#         legend.key.width = unit(2, "cm"),
-#         panel.background = element_rect(fill = 'white'),
-#         axis.ticks = element_blank(),
-#         axis.text = element_blank(),
-#         axis.title = element_blank()) +
-#   guides(fill = guide_colorbar(title.position = 'top', title.hjust = 0.5))
 # 
 
 g.ts <- ggplot(df.ts) +
@@ -161,12 +125,21 @@ g.ts <- ggplot(df.ts) +
   scale_shape_discrete('Satellite platform:') +
   scale_x_date('') +
   scale_y_continuous(position = 'right', limits = c(0, 1)) +
-  theme(legend.position = 'bottom',
+  theme(legend.position = c(0.1, 0.9),
         strip.background = element_blank(),
         strip.text = element_text(size = rel(1.2)),
         panel.grid = element_line(linetype = 'dotted', colour = 'grey50'),
         panel.grid.minor = element_blank(),
-        panel.background = element_rect(fill = 'white', colour = 'grey10'))
+        panel.background = element_rect(fill = 'white', colour = 'grey10')) +
+  guides(colour = guide_legend(title.position = 'top', title.hjust = 0.5))
+
+
+require(patchwork)
+
+gCombined <- (g.map.img / g.map.TCI) | g.ts +
+  plot_layout(guides = "collect") & theme(legend.position = "bottom") 
+
+
 
 fig.name <- paste0('fig___', 'local', 'TCI')
 fig.path <- paste0('figures/final_figures/')

@@ -27,7 +27,7 @@ source('code/general/calc_TCI.R')
 dir.create(path = paste0('data/inter_data/modis_test_zones/', zone_name), 
            recursive = T, showWarnings = F)
 
-# read the data
+# read the time series data
 dat.ts <- bind_rows(
   dat1 %>% 
     dplyr::select(-X7, -time) %>% 
@@ -43,7 +43,7 @@ dat.ts <- bind_rows(
   mutate(pixID = row_number())
 
 
-# calc the metrics per time series
+# calculate the TCI metric per time series
 dat.TCI <- dat.ts %>% 
   filter(!is.na(NDVI)) %>% 
   group_by(pixID) %>%
@@ -53,38 +53,10 @@ dat.TCI <- dat.ts %>%
   arrange(DOI.hour) %>%
   summarise(TCI = calc_TCI(NDVI, DOI.hour))
 
-save('dat.TCI', 'dat.ts', file = paste0('data/final_data/data4figures/df_MODIS_', 
-                              zone_name, '.RData'))
+# transform to sf object with projection (assuming GEE exports csv in lat/lon) 
+pts.TCI <- st_as_sf(x = dat.TCI, coords = c('lon','lat'), crs = 4326)
 
-
-
-### THERE IS SOME ISSUE HERE>>> with the projections... 
-### The modis data, exported as CSV, seems to be in "Sinusoidal" from the export
-### displayed in lat/lon
-### and the S2 is in '+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs'
-### need to bring these together... 
-
-
-
-# get S2 ref image
-S2_img <- brick(paste0(dpath,'/S2_L2A_image_', zone_name, '.tif'))
-
-
-
-
-pts <- st_as_sf(x = dat.TCI, coords = c('lon','lat'), 
-                crs = '+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs ')
-
-pts <- st_as_sf(x = dat.TCI, coords = c('lon','lat'), 
-                crs = 4326)
-
-
-
-
-pts_rprj <- pts
-#pts_rprj <- st_transform(pts, crs(S2_img))
-
-
+# function to draw a box around the points
 bbox_polygon <- function(x) {
   bb <- sf::st_bbox(x)
   
@@ -100,20 +72,24 @@ bbox_polygon <- function(x) {
   sf::st_polygon(list(p))
 }
 
-bb <- st_sfc(bbox_polygon(pts_rprj)) %>%
-  st_set_crs(st_crs(pts_rprj))
+# get bounding box for our points
+bb <- st_sfc(bbox_polygon(pts.TCI)) %>%
+  st_set_crs(st_crs(pts.TCI))
 
-
-point_tiles <- pts_rprj %>%
-  #st_geometry() %>%
+# calculate Voronoi polygons which will serve as proxy for MODIS gridcells
+point_tiles <- pts.TCI %>%
   st_union() %>%
   st_voronoi(., envelope = bb) %>%
   st_cast()
   
-
+# add the attributes of the original and clip of unnecessarily parts
 point_tiles <- point_tiles %>%
   data.frame(geometry = .) %>%
   st_sf(.) %>%
-  st_join(., pts_rprj) %>%
+  st_join(., pts.TCI) %>%
   st_intersection(., bb) 
+
+# export it all
+fname <- paste0('data/final_data/data4figures/df_MODIS_', zone_name, '.RData')
+save('pts.TCI', 'point_tiles', 'dat.ts', file = fname)
 
