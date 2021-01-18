@@ -31,3 +31,4 @@ if(harvestData){
 
 source('code/figures/fig___simulation.R')
 source('code/figures/fig___california-TCI-rs.R')
+source('code/figures/fig___local-TCI-ex1.R')
