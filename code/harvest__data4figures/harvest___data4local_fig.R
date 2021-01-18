@@ -12,10 +12,10 @@ require(readr)
 require(dplyr)
 require(sf)
 
-zone_name <- 'vercelli_2018'
-# zone_name <- 'beauce_2019'
-# zone_name <- 'hyytiala_2018'
-# zone_name <- 'fresno_2019'
+zone_name <- 'rovieng_2019'
+
+# zone_name <- 'rondonia_2019'
+# zone_name <- 'vercelli_2018'
 
 dpath <- paste0('data/inter_data/from_GEE')
 
