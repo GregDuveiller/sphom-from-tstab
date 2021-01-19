@@ -39,6 +39,11 @@ S2_img <- brick(paste0(dpath,'/S2_L2A_image_', zone_name, '.tif'))
 # load data to make figure 
 load(paste0(dpath, '/df_MODIS_', zone_name, '.RData')) # <---'pts.TCI', 'dat.ts', 'point_tiles'
 
+# get pixIDs for selected points
+sel.pts.prj <- st_as_sf(x = iPix2Sel, coords = c('lon','lat'), crs = 4326)
+iPixies <- data.frame(pixLbl = LETTERS[1:dim(sel.pts.prj)[1]],
+                      pixID = st_nearest_feature(x = sel.pts.prj, y = pts.TCI))
+
 
 # prepare time series of selected points
 df.ts <- dat.ts %>% 
@@ -137,26 +142,19 @@ dir.create(path = fig.path, recursive = T, showWarnings = F)
 
 # name
 zone_name <- 'sahara_2019'
+
 # colourbar range
 TCI.range <- c(0,1)
+
 # select pixels to illustrate in this figure
-iPixies <- data.frame(pixLbl = c('A','B','C','D'),
-                      pixID = c(24, 1220, 377, 590)) 
-
-iPix <- data.frame(lon = 4.54, lat = 29.04) %>%
-  bind_rows(c(lon = 4.54, lat = 29.04))
-
-
-iPix2Sel <- c(lon = 4.54, lat = 29.04) %>%
-  bind_rows(c(lon = 4.54, lat = 29.04)) %>%
-  bind_rows(c(lon = 4.54, lat = 29.04)) %>%
-  bind_rows(c(lon = 4.54, lat = 29.04))
+iPix2Sel <- c(lon = 4.53,  lat = 29.04) %>%
+  bind_rows(c(lon = 4.518, lat = 29.065)) %>%
+  bind_rows(c(lon = 4.59,  lat = 29.1)) %>%
+  bind_rows(c(lon = 4.50,  lat = 29.105))
   
-
-
-
-
-gEx4 <- get_ggTCI_fig('sahara_2019', c(0.8,1.2), iPixies, c(0.075, 0.175))
+  
+# get GGPLOT object
+gEx4 <- get_ggTCI_fig('sahara_2019', c(0.8, 1.2), iPix2Sel, c(0.075, 0.175))
 
 fig.name <- paste0('fig___', 'local-TCI-ex4', '.', fig.fmt)
 ggsave(fig.name, plot = gEx4, path = fig.path, device = fig.fmt, 
