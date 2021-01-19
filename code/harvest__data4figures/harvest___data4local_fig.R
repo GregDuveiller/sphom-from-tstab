@@ -12,8 +12,8 @@ require(readr)
 require(dplyr)
 require(sf)
 
-zone_name <- 'rovieng_2019'
-
+zone_name <- 'sahara_2019'
+# zone_name <- 'rovieng_2019'
 # zone_name <- 'rondonia_2019'
 # zone_name <- 'vercelli_2018'
 

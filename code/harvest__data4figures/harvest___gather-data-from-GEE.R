@@ -10,6 +10,23 @@
 gee_export_path <- '../../../google_drive/GEE_exported_data'
 
 
+zone_name <- 'sahara_2019'
+
+file.copy(from = paste0(gee_export_path, '/MODIS_AQUA_NDVI_datablock_', zone_name,'.csv'),
+          to = 'data/inter_data/from_GEE', 
+          recursive = T, copy.date = T, overwrite = T)
+
+file.copy(from = paste0(gee_export_path, '/MODIS_TERRA_NDVI_datablock_', zone_name,'.csv'),
+          to = 'data/inter_data/from_GEE', 
+          recursive = T, copy.date = T, overwrite = T)
+
+file.copy(from = paste0(gee_export_path, '/S2_L2A_image_', zone_name,'.tif'),
+          to = 'data/final_data/data4figures', 
+          recursive = T, copy.date = T, overwrite = T)
+
+
+
+
 file.copy(from = paste0(gee_export_path, '/MODIS_AQUA_NDVI_datablock_vercelli_2018.csv'),
           to = 'data/inter_data/from_GEE', 
           recursive = T, copy.date = T, overwrite = T)
