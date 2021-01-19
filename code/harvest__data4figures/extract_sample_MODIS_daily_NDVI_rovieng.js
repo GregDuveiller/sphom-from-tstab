@@ -1,18 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var ROI = 
-    /* color: #ffc82d */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[105.05477776468128, 13.301182729323495],
-          [105.05477776468128, 13.192571798232288],
-          [105.1711641782555, 13.192571798232288],
-          [105.1711641782555, 13.301182729323495]]], null, false);
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Script to extract a MODIS data block and S2 image from GEE to create a figure
 // for a specific test zone "rondonia"
 //
@@ -22,7 +7,11 @@ var ROI =
 
 //---- SET-UP ----
 
-
+var ROI = ee.Geometry.Polygon(
+        [[[105.05477776468128, 13.301182729323495],
+          [105.05477776468128, 13.192571798232288],
+          [105.1711641782555, 13.192571798232288],
+          [105.1711641782555, 13.301182729323495]]], null, false);
 
 var MOD09GQ_col = ee.ImageCollection("MODIS/006/MOD09GQ"),
     MOD09GA_col = ee.ImageCollection("MODIS/006/MOD09GA"),
@@ -38,6 +27,7 @@ var end_date = ee.Date.fromYMD(year,12,31);
 
 // This is selected manually by exploring them first in the S2 explorer
 var S2_img = ee.Image('COPERNICUS/S2_SR/20191117T032021_20191117T033345_T48PWV');
+var S2_date = '20191117';
 
 // Visual check
 Map.addLayer(S2_img.clip(ROI), {gamma: 1.3, min: 200, max: 2600, bands: ['B4', 'B3', 'B2']});
@@ -194,7 +184,7 @@ Export.table.toDrive({
 // export S2 snapshot
 Export.image.toDrive({
   image: S2_img.select('B2', 'B3', 'B4', 'B8').clip(ROI),
-  description: 'S2_L2A_image_' + roiName + '_' + year,
+  description: 'S2_L2A_image_' + roiName + '_' + year + '_' + S2_date,
   region: ROI,
   crs: 'EPSG:4326',     // <- we explicitely export in lat/lon to facilite figuremaking
   maxPixels: 10000000000000,

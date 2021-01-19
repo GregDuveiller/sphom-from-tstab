@@ -27,6 +27,7 @@ var end_date = ee.Date.fromYMD(year,12,31);
 
 // This is selected manually by exploring them first in the S2 explorer
 var S2_img = ee.Image('COPERNICUS/S2_SR/20190727T142049_20190727T142045_T20LQN');
+var S2_date = '20190727';
 
 // Visual check
 Map.addLayer(S2_img.clip(ROI), {gamma: 1.3, min: 200, max: 2600, bands: ['B4', 'B3', 'B2']});
@@ -183,7 +184,7 @@ Export.table.toDrive({
 // export S2 snapshot
 Export.image.toDrive({
   image: S2_img.select('B2', 'B3', 'B4', 'B8').clip(ROI),
-  description: 'S2_L2A_image_' + roiName + '_' + year,
+  description: 'S2_L2A_image_' + roiName + '_' + year + '_' + S2_date,
   region: ROI,
   crs: 'EPSG:4326',     // <- we explicitely export in lat/lon to facilite figuremaking
   maxPixels: 10000000000000,

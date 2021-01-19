@@ -1,5 +1,5 @@
 // Script to extract a MODIS data block and S2 image from GEE to create a figure
-// for a specific test zone "vercelli"
+// for a specific test zone "sahara"
 //
 // Gregory Duveiller - Jan 2021
 // -------------------------------------------------------------------------------//
@@ -8,10 +8,10 @@
 //---- SET-UP ----
 
 var ROI = ee.Geometry.Polygon(
-        [[[8.186486217639182, 45.26969429026482],
-          [8.186486217639182, 45.17586813234045],
-          [8.331025097033713, 45.17586813234045],
-          [8.331025097033713, 45.26969429026482]]], null, false);
+    [[[4.474343404371592, 29.107696920875814],
+      [4.474343404371592, 28.998752626143386],
+      [4.605149373609874, 28.998752626143386],
+      [4.605149373609874, 29.107696920875814]]], null, false);
 
 var MOD09GQ_col = ee.ImageCollection("MODIS/006/MOD09GQ"),
     MOD09GA_col = ee.ImageCollection("MODIS/006/MOD09GA"),
@@ -20,14 +20,14 @@ var MOD09GQ_col = ee.ImageCollection("MODIS/006/MOD09GQ"),
 
 
 // set the name of the ROI
-var roiName = 'vercelli';
-var year = 2018;
+var roiName = 'sahara';
+var year = 2019;
 var start_date = ee.Date.fromYMD(year,1,1);
 var end_date = ee.Date.fromYMD(year,12,31);
 
 // This is selected manually by exploring them first in the S2 explorer
-var S2_img = ee.Image('COPERNICUS/S2_SR/20180621T102021_20180621T102316_T32TMR');
-var S2_date = '20180621';
+var S2_img = ee.Image('COPERNICUS/S2_SR/20190726T102031_20190726T102654_T31RFN');
+var S2_date = '20190726';
 
 // Visual check
 Map.addLayer(S2_img.clip(ROI), {gamma: 1.3, min: 200, max: 2600, bands: ['B4', 'B3', 'B2']});
