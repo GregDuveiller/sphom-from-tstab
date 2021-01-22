@@ -24,11 +24,14 @@ load('data/final_data/data4figures/df_TCI.RData')
 load('data/final_data/data4figures/df_CDL.RData')
 
 
+# set-up colorbar
+TCI.range <- c(0.1, 0.9)
+
 g.TCI <- ggplot(df_TCI,  aes(x = x, y = y)) +
   geom_raster(aes(fill = TCI)) +
   facet_grid(.~year) + 
   scale_fill_viridis_c('Temporal Coherence Index (TCI)', 
-                       option = 'magma', limits = c(0,1), oob = squish) +
+                       option = 'magma', limits = TCI.range, oob = squish) +
   coord_equal(expand = F) +
   theme(legend.position = 'top',
         axis.title = element_blank(),
@@ -41,8 +44,7 @@ g.TCI <- ggplot(df_TCI,  aes(x = x, y = y)) +
 cols <- lgd_sub$colors
 names(cols) <- lgd_sub$classID
 
-g.CDL <- ggplot(df_CDL %>% filter(year %in% years2plot),  
-       aes(x = x, y = y)) +
+g.CDL <- ggplot(df_CDL, aes(x = x, y = y)) +
   geom_raster(aes(fill = factor(CDL))) +
   facet_grid(.~year) + 
   scale_fill_manual(values = cols) +
