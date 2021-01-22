@@ -48,11 +48,20 @@ for(zone_name in zone_names){
   
   # function to get flags of which data poitns to filter out
   get_filter_flag <- function(dat.df, ...){
+    
+    d_doi_lag1 <- diff(dat.df$DOI.hour, lag = 1)
+    d_doi_lag2 <- diff(dat.df$DOI.hour, lag = 2)
+    
     d_vi_lag1 <- diff(dat.df$NDVI, lag = 1)
-    Q <- quantile(d_vi_lag1, probs = c(0.25, 0.75), na.rm = T)
-    dat.df$I2k <- c(
-      (d_vi_lag1 >= Q[1] - diff(Q) * 1.5) &
-      (d_vi_lag1 <= Q[2] + diff(Q) * 1.5), F) 
+    d_vi_lag2 <- diff(dat.df$NDVI, lag = 2)
+    
+    est_d_vi <- d_vi_lag2/d_doi_lag2 * d_doi_lag1[1:(length(d_doi_lag1) - 1)]
+    res_d_vi <- est_d_vi - d_vi_lag1[1:(length(d_doi_lag1) - 1)]
+    
+    Q <- quantile(res_d_vi, probs = c(0.25, 0.75), na.rm = T)
+    dat.df$I2k <- c(F,
+      (res_d_vi >= Q[1] - diff(Q) * 1.5) &
+      (res_d_vi <= Q[2] + diff(Q) * 1.5), F) 
     return(dat.df)
   }
 

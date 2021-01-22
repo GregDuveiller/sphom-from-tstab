@@ -12,7 +12,18 @@ calc_TCI <- function(VI, DOI, minEntropy = 0.01, filterOutliers = T){
   #
   # G.Duveiller - July 2020
   
-
+  
+  if(filterOutliers){
+    d_vi_lag1 <- diff(VI, lag = 1)
+    Q <- quantile(d_vi_lag1, probs = c(0.25, 0.75), na.rm = T)
+    I2k <- (d_vi_lag1 >= Q[1] - diff(Q)*1.5) & (d_vi_lag1 <= Q[2] + diff(Q)*1.5) # <--- careful with <=... diff from text
+  }
+  
+  VI <- VI[I2k]   # <--- NOT EXACTLY BEST WAY TO GO ... as we remove too much!
+  DOI <- DOI[I2k]
+  
+  #df$X1 -> VI; df$X2 -> DOI
+  
   d_doi_lag1 <- diff(DOI, lag = 1)
   d_doi_lag2 <- diff(DOI, lag = 2)
   
@@ -22,20 +33,13 @@ calc_TCI <- function(VI, DOI, minEntropy = 0.01, filterOutliers = T){
   est_d_vi <- d_vi_lag2/d_doi_lag2 * d_doi_lag1[1:(length(d_doi_lag1) - 1)]
   res_d_vi <- est_d_vi - d_vi_lag1[1:(length(d_doi_lag1) - 1)]
   
-  # filter them out 
-  if(filterOutliers){
-  Q <- quantile(res_d_vi, probs = c(0.25, 0.75), na.rm = T)
-  I2k <- (res_d_vi >= Q[1] - diff(Q)*1.5) & (res_d_vi <= Q[2] + diff(Q)*1.5) # <--- careful with <=... diff from text
-  res_d_vi_filtered <- res_d_vi[I2k]
-  } else {res_d_vi_filtered <- res_d_vi}
-  
   # entropy assuming residues follow a Gaussian distribution
-  H <- 0.5 * log(2 * pi * exp(1) * sd(res_d_vi_filtered)^2)
+  H <- 0.5 * log(2 * pi * exp(1) * sd(res_d_vi)^2)
   # Can be simplified to:
   # H <- log(sd(res_d_ndvi)) + 1.418939
   
   # scaling it
-  TCI <- (log(sd(res_d_vi_filtered)) + 1.418939)/(log(minEntropy) + 1.418939)
+  TCI <- (log(sd(res_d_vi)) + 1.418939)/(log(minEntropy) + 1.418939)
 
   return(TCI)
 }
