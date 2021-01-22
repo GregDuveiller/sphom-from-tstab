@@ -114,10 +114,13 @@ get_ggTCI_fig <- function(zone_name, TCI.range, iPixies, NDVI.range = c(0, 1)){
     geom_vline(xintercept = img_date, colour = 'grey60', size = 1) +
     geom_point(aes(x = date, y = NDVI, colour = platform, shape = platform),
                size = 2 ) +
+    geom_point(data = df.ts %>% filter(I2k == F), 
+               aes(x = date, y = NDVI, shape = platform),
+               colour = 'grey80', size = 2) +
     facet_wrap(~pixLbl_long, nc = 1) +
     scale_colour_manual('Satellite platform:',
                         values = c('AQUA' = col.1, 'TERRA' = col.2)) +
-    scale_shape_discrete('Satellite platform:') +
+    scale_shape_discrete('Satellite platform:', guide = 'none') +
     scale_x_date('') +
     scale_y_continuous(position = 'right', limits = NDVI.range) +
     theme(legend.position = 'bottom',
