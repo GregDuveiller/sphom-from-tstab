@@ -38,17 +38,32 @@ for(zone_name in zone_names){
     rename(lon = 'longitude', lat = 'latitude')  %>% 
     mutate(date = as.Date(date, '%Y_%m_%d')) %>%
     group_by(date, platform) %>%
-    mutate(pixID = row_number())
-  
-  
-  # calculate the TCI metric per time series
-  dat.TCI <- dat.ts %>% 
+    mutate(pixID = row_number()) %>%
     filter(!is.na(NDVI)) %>% 
     group_by(pixID) %>%
     mutate(DOI = as.numeric(strftime(date, format = "%j")),
            DOI.hour = DOI + ifelse(platform == 'TERRA', 10.5/24, 13.5/24)) %>%
+    arrange(DOI.hour)
+  
+  
+  # function to get flags of which data poitns to filter out
+  get_filter_flag <- function(dat.df, ...){
+    d_vi_lag1 <- diff(dat.df$NDVI, lag = 1)
+    Q <- quantile(d_vi_lag1, probs = c(0.25, 0.75), na.rm = T)
+    dat.df$I2k <- c(
+      (d_vi_lag1 >= Q[1] - diff(Q) * 1.5) &
+      (d_vi_lag1 <= Q[2] + diff(Q) * 1.5), F) 
+    return(dat.df)
+  }
+
+  # Add column to dat.ts with those flags 
+  dat.ts <- dat.ts %>% 
+    group_by(pixID) %>%
+    group_modify(.f = get_filter_flag)
+  
+  # calculate the TCI metric per time series
+  dat.TCI <- dat.ts %>% 
     group_by(pixID, lat, lon) %>%
-    arrange(DOI.hour) %>%
     summarise(TCI = calc_TCI(NDVI, DOI.hour))
   
   # transform to sf object with projection (assuming GEE exports csv in lat/lon) 

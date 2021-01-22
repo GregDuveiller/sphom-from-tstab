@@ -1,4 +1,4 @@
-calc_TCI <- function(VI, DOI, minEntropy = 0.01){
+calc_TCI <- function(VI, DOI, minEntropy = 0.01, filterOutliers = T){
   
   # Function to get the Temporal Consistency Index (TCI) based on the entropy of 
   # the residues assuming a normal distribution, themselves obtained be 
@@ -13,9 +13,16 @@ calc_TCI <- function(VI, DOI, minEntropy = 0.01){
   # G.Duveiller - July 2020
   
   
-  # need to code the outlier filtering ... 
+  if(filterOutliers){
+    d_vi_lag1 <- diff(VI, lag = 1)
+    Q <- quantile(d_vi_lag1, probs = c(0.25, 0.75), na.rm = T)
+    I2k <- (d_vi_lag1 >= Q[1] - diff(Q)*1.5) & (d_vi_lag1 <= Q[2] + diff(Q)*1.5) # <--- careful with <=... diff from text
+  }
   
+  VI <- VI[I2k]   # <--- NOT EXACTLY BEST WAY TO GO ... as we remove too much!
+  DOI <- DOI[I2k]
   
+  #df$X1 -> VI; df$X2 -> DOI
   
   d_doi_lag1 <- diff(DOI, lag = 1)
   d_doi_lag2 <- diff(DOI, lag = 2)
