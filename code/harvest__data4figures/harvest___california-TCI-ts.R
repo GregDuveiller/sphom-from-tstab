@@ -58,8 +58,7 @@ save('df_CDL', 'lgd_sub', file = paste0(out_path, '/df_CDL.RData'))
 
 # Prepare TCI data ----
 # get TCI data
-r_TCI_wgs84 <- stack(paste0(TCI_path, '/TCI_NDVI_ts_California_WGS84.tif'))
-r_TCI_wgs84 <- r_TCI_wgs84[[2:13]]  # Note: we avoid 2007 which has a diff res in CDL
+r_TCI_wgs84 <- stack(paste0(TCI_path, '/TCI_ts_NDVI_California_WGS84.tif'))
 
 # reproject
 r_TCI_conus <- projectRaster(r_TCI_wgs84/10000, r_CDL_conus)

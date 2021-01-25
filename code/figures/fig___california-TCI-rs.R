@@ -42,14 +42,22 @@ g.TCI <- ggplot(df_TCI,  aes(x = x, y = y)) +
 
 
 cols <- lgd_sub$colors
-names(cols) <- lgd_sub$classID
+names(cols) <- lgd_sub$className
+
+freq <- lgd_sub$freq
+names(freq) <- lgd_sub$className
+most_freq <- names(tail(sort(freq), 15))
+
+df_CDL <- df_CDL %>%
+  mutate(classID = factor(CDL)) %>% 
+  left_join(lgd_sub %>% dplyr::select(classID, className), by = 'classID')
 
 g.CDL <- ggplot(df_CDL, aes(x = x, y = y)) +
-  geom_raster(aes(fill = factor(CDL))) +
+  geom_raster(aes(fill = className)) +
   facet_grid(.~year) + 
-  scale_fill_manual(values = cols) +
+  scale_fill_manual('CDL class: ', breaks = most_freq, values = cols) +
   coord_equal(expand = F) +
-  theme(legend.position = 'none',
+  theme(legend.position = 'bottom',
         axis.title = element_blank(),
         axis.text = element_text(size = 6), 
         axis.text.y = element_text(angle = 90, hjust = 0.5))
@@ -58,12 +66,12 @@ g.CDL <- ggplot(df_CDL, aes(x = x, y = y)) +
 
 # printing the final plot -----
 fig.name <- 'fig___yearlyTS'
-fig.width <- 12; fig.height <- 7
+fig.width <- 12; fig.height <- 8
 fig.fullfname <- paste0(fig.path, '/', fig.name, '.', fig.fmt)
 if(fig.fmt == 'png'){png(fig.fullfname, width = fig.width, height = fig.height, units = "in", res= 150)}
 if(fig.fmt == 'pdf'){pdf(fig.fullfname, width = fig.width, height = fig.height)}
 
-w <- 1; h <- 0.55
+w <- 1; h <- 0.45
 
 print(g.TCI, vp = viewport(width = w, height = h, x = 0, y = 1-h, just = c(0,0)))
 print(g.CDL, vp = viewport(width = w, height = 1-h, x = 0, y = 0, just = c(0,0)))
