@@ -1,0 +1,348 @@
+<Layout worldFileMap="{1c2f54fe-188b-4464-a7ef-3b803102c47b}" printResolution="300" units="mm" name="map">
+ <Snapper snapToGuides="1" snapToItems="1" tolerance="10" snapToGrid="0"/>
+ <Grid resUnits="mm" offsetY="0" offsetX="0" resolution="10" offsetUnits="mm"/>
+ <PageCollection>
+  <symbol type="fill" force_rhr="0" clip_to_extent="1" name="" alpha="1">
+   <layer pass="0" class="SimpleFill" enabled="1" locked="0">
+    <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+    <prop k="color" v="255,255,255,255"/>
+    <prop k="joinstyle" v="miter"/>
+    <prop k="offset" v="0,0"/>
+    <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+    <prop k="offset_unit" v="MM"/>
+    <prop k="outline_color" v="35,35,35,255"/>
+    <prop k="outline_style" v="no"/>
+    <prop k="outline_width" v="0.26"/>
+    <prop k="outline_width_unit" v="MM"/>
+    <prop k="style" v="solid"/>
+    <data_defined_properties>
+     <Option type="Map">
+      <Option type="QString" value="" name="name"/>
+      <Option name="properties"/>
+      <Option type="QString" value="collection" name="type"/>
+     </Option>
+    </data_defined_properties>
+   </layer>
+  </symbol>
+  <LayoutItem id="" referencePoint="0" background="true" type="65638" positionLock="false" zValue="0" outlineWidthM="0.3,mm" groupUuid="" positionOnPage="0,0,mm" blendMode="0" excludeFromExports="0" visibility="1" frameJoinStyle="miter" itemRotation="0" uuid="{a4cba707-3e39-4713-a39e-c60f3ecc1cb3}" templateUuid="{a4cba707-3e39-4713-a39e-c60f3ecc1cb3}" size="185,170,mm" frame="false" position="0,0,mm" opacity="1">
+   <FrameColor green="0" blue="0" red="0" alpha="255"/>
+   <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+   <LayoutObject>
+    <dataDefinedProperties>
+     <Option type="Map">
+      <Option type="QString" value="" name="name"/>
+      <Option name="properties"/>
+      <Option type="QString" value="collection" name="type"/>
+     </Option>
+    </dataDefinedProperties>
+    <customproperties/>
+   </LayoutObject>
+   <symbol type="fill" force_rhr="0" clip_to_extent="1" name="" alpha="1">
+    <layer pass="0" class="SimpleFill" enabled="1" locked="0">
+     <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+     <prop k="color" v="255,255,255,255"/>
+     <prop k="joinstyle" v="miter"/>
+     <prop k="offset" v="0,0"/>
+     <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+     <prop k="offset_unit" v="MM"/>
+     <prop k="outline_color" v="35,35,35,255"/>
+     <prop k="outline_style" v="no"/>
+     <prop k="outline_width" v="0.26"/>
+     <prop k="outline_width_unit" v="MM"/>
+     <prop k="style" v="solid"/>
+     <data_defined_properties>
+      <Option type="Map">
+       <Option type="QString" value="" name="name"/>
+       <Option name="properties"/>
+       <Option type="QString" value="collection" name="type"/>
+      </Option>
+     </data_defined_properties>
+    </layer>
+   </symbol>
+  </LayoutItem>
+  <GuideCollection visible="1"/>
+ </PageCollection>
+ <LayoutItem id="" referencePoint="0" background="false" type="65641" htmlState="0" valign="32" positionLock="false" zValue="11" outlineWidthM="0.3,mm" groupUuid="" marginX="0" marginY="0" positionOnPage="116.967,86.5529,mm" blendMode="0" excludeFromExports="0" visibility="1" frameJoinStyle="miter" itemRotation="0" uuid="{bf49519d-3676-4d26-97ba-75720bb241de}" templateUuid="{bf49519d-3676-4d26-97ba-75720bb241de}" halign="8" size="6.60343,6.89462,mm" frame="false" position="116.967,86.5529,mm" opacity="1" labelText="c">
+  <FrameColor green="0" blue="0" red="0" alpha="255"/>
+  <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+  <LabelFont description="Arial,12,-1,5,50,0,0,0,0,0,Regular" style="Regular"/>
+  <FontColor green="255" blue="255" red="255" alpha="255"/>
+ </LayoutItem>
+ <LayoutItem id="" referencePoint="0" background="false" type="65641" htmlState="0" valign="32" positionLock="false" zValue="10" outlineWidthM="0.3,mm" groupUuid="" marginX="0" marginY="0" positionOnPage="2.46949,86.5529,mm" blendMode="0" excludeFromExports="0" visibility="1" frameJoinStyle="miter" itemRotation="0" uuid="{bba6592f-0c45-4494-823a-037f8c7c94ba}" templateUuid="{bba6592f-0c45-4494-823a-037f8c7c94ba}" halign="8" size="10.3076,7.70036,mm" frame="false" position="2.46949,86.5529,mm" opacity="1" labelText="b">
+  <FrameColor green="0" blue="0" red="0" alpha="255"/>
+  <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+  <LabelFont description="Arial,12,-1,5,50,0,0,0,0,0,Regular" style="Regular"/>
+  <FontColor green="255" blue="255" red="255" alpha="255"/>
+ </LayoutItem>
+ <LayoutItem rasterBorder="0" fontColor="#000000" map_uuid="{1c2f54fe-188b-4464-a7ef-3b803102c47b}" symbolWidth="4" symbolAlignment="1" legendFilterByAtlas="0" rasterBorderColor="0,0,0,255" visibility="1" itemRotation="0" blendMode="0" columnSpace="2" positionOnPage="185.15,0.0427437,mm" frameJoinStyle="miter" wmsLegendWidth="50" zValue="8" lineSpacing="1" type="65642" size="25.8313,173.02,mm" wrapChar="" groupUuid="" equalColumnWidth="0" rasterBorderWidth="0" boxSpace="2" uuid="{00059798-2c68-4281-a6bd-e70d0b6bc7b2}" columnCount="1" id="" excludeFromExports="0" frame="false" splitLayer="0" referencePoint="0" titleAlignment="1" wmsLegendHeight="25" opacity="1" symbolHeight="3" templateUuid="{00059798-2c68-4281-a6bd-e70d0b6bc7b2}" background="true" position="185.15,0.0427437,mm" resizeToContents="1" title="TCI" positionLock="false" outlineWidthM="0.3,mm">
+  <FrameColor green="0" blue="0" red="0" alpha="255"/>
+  <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+  <styles>
+   <style marginBottom="3.5" alignment="1" name="title">
+    <styleFont description=".AppleSystemUIFont,16,-1,5,50,0,0,0,0,0" style=""/>
+   </style>
+   <style marginTop="3" alignment="1" name="group">
+    <styleFont description=".AppleSystemUIFont,14,-1,5,50,0,0,0,0,0" style=""/>
+   </style>
+   <style marginTop="3" alignment="1" name="subgroup">
+    <styleFont description=".AppleSystemUIFont,12,-1,5,50,0,0,0,0,0" style=""/>
+   </style>
+   <style alignment="1" name="symbol">
+    <styleFont description=".AppleSystemUIFont,13,-1,5,50,0,0,0,0,0" style=""/>
+   </style>
+   <style marginLeft="2" alignment="1" name="symbolLabel">
+    <styleFont description=".AppleSystemUIFont,12,-1,5,50,0,0,0,0,0" style=""/>
+   </style>
+  </styles>
+  <layer-tree-group>
+   <customproperties/>
+   <layer-tree-layer id="global_TCI_NDVI_2019_WGS84_94d76f68_7ecc_4b2b_82a9_e234945c051d" legend_split_behavior="0" expanded="1" source="../../data/final_data/data4figures/TCI_NDVI_2020_Global_WGS84.tif" checked="Qt::Checked" legend_exp="" name="TCI_NDVI_2020_Global_WGS84" providerKey="gdal" patch_size="-1,-1">
+    <customproperties>
+     <property key="cached_name" value="TCI_NDVI_2020_Global_WGS84"/>
+     <property key="legend/label-10" value="0.2"/>
+     <property key="legend/label-20" value="0.4"/>
+     <property key="legend/label-31" value="0.6"/>
+     <property key="legend/label-42" value="0.8"/>
+     <property key="legend/label-51" value="1"/>
+     <property key="legend/title-style" value="hidden"/>
+    </customproperties>
+   </layer-tree-layer>
+   <custom-order enabled="0"/>
+  </layer-tree-group>
+ </LayoutItem>
+ <LayoutItem id="" referencePoint="0" background="false" type="65641" htmlState="0" valign="32" positionLock="false" zValue="5" outlineWidthM="0.3,mm" groupUuid="" marginX="0" marginY="0" positionOnPage="2.46949,1,mm" blendMode="0" excludeFromExports="0" visibility="1" frameJoinStyle="miter" itemRotation="0" uuid="{4d729d46-d014-468e-baca-05ca7b54a9ec}" templateUuid="{4d729d46-d014-468e-baca-05ca7b54a9ec}" halign="8" size="10.3076,7.70036,mm" frame="false" position="2.46949,1,mm" opacity="1" labelText="a">
+  <FrameColor green="0" blue="0" red="0" alpha="255"/>
+  <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+  <LabelFont description="Arial,12,-1,5,50,0,0,0,0,0,Regular" style="Regular"/>
+  <FontColor green="255" blue="255" red="255" alpha="255"/>
+ </LayoutItem>
+ <LayoutItem id="colorbar" referencePoint="0" background="false" resizeMode="1" svgFillColor="255,255,255,255" type="65640" file="../../data/final_data/data4figures/TCI_colorbar.png" svgBorderColor="0,0,0,255" positionLock="false" zValue="4" outlineWidthM="0.3,mm" mode="1" groupUuid="" pictureWidth="69.2944" positionOnPage="115.856,179.107,mm" northMode="0" blendMode="0" excludeFromExports="0" svgBorderWidth="0.2" pictureHeight="10.3085" mapUuid="" visibility="1" frameJoinStyle="miter" pictureRotation="0" itemRotation="0" anchorPoint="0" uuid="{aa6f42ea-ae58-45ce-a187-497d915beb1c}" templateUuid="{aa6f42ea-ae58-45ce-a187-497d915beb1c}" northOffset="0" size="69.2944,10.3085,mm" frame="false" position="115.856,179.107,mm" opacity="1">
+  <FrameColor green="0" blue="0" red="0" alpha="255"/>
+  <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+ </LayoutItem>
+ <LayoutItem id="" referencePoint="0" background="true" followPresetName="" type="65639" mapFlags="0" labelMargin="0,mm" drawCanvasItems="false" positionLock="false" zValue="3" outlineWidthM="0.3,mm" groupUuid="" positionOnPage="115.3,85.15,mm" isTemporal="0" blendMode="0" excludeFromExports="0" followPreset="false" visibility="1" frameJoinStyle="miter" itemRotation="0" uuid="{fa3507ac-7bd8-42fe-9f82-fa816125d857}" templateUuid="{fa3507ac-7bd8-42fe-9f82-fa816125d857}" keepLayerSet="true" size="70,84.85,mm" frame="true" position="115.3,85.15,mm" opacity="1" mapRotation="0">
+  <FrameColor green="0" blue="0" red="0" alpha="255"/>
+  <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+  <Extent xmax="-53.17300000000000182" ymax="-11.48365892857143145" ymin="-14.04734107142856736" xmin="-55.2879999999999967"/>
+  <LayerSet>
+   <Layer source="/Users/greg/work/workspace/spHomogeneity/data/final_data/data4figures/TCI_NDVI_2019_BoliviaMatoGrosso_WGS84.tif" name="TCI_NDVI_2019_BoliviaMatoGrosso_WGS84" provider="gdal">TCI_NDVI_2019_BoliviaMatoGrosso_WGS84_52371265_3169_493f_8bd1_bcc4466598e4</Layer>
+  </LayerSet>
+  <AtlasMap margin="0.10000000000000001" scalingMode="2" atlasDriven="0"/>
+  <labelBlockingItems/>
+ </LayoutItem>
+ <LayoutItem id="" referencePoint="0" background="true" followPresetName="" type="65639" mapFlags="0" labelMargin="0,mm" drawCanvasItems="false" positionLock="false" zValue="2" outlineWidthM="0.3,mm" groupUuid="" positionOnPage="0,85,mm" isTemporal="0" blendMode="0" excludeFromExports="0" followPreset="false" visibility="1" frameJoinStyle="miter" itemRotation="0" uuid="{94537a18-378d-42af-bd22-8ae33d408813}" templateUuid="{94537a18-378d-42af-bd22-8ae33d408813}" keepLayerSet="true" size="115,85,mm" frame="true" position="0,85,mm" opacity="1" mapRotation="0">
+  <FrameColor green="0" blue="0" red="0" alpha="255"/>
+  <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+  <Extent xmax="-52.65281630252832201" ymax="-9.64042655085289013" ymin="-23.16281813513748489" xmin="-70.94781668126630336"/>
+  <LayerSet>
+   <Layer source="/Users/greg/work/workspace/spHomogeneity/data/final_data/data4figures/ne_50m_admin_1_states_provinces_lines.shp" name="ne_50m_admin_1_states_provinces_lines" provider="ogr">ne_50m_admin_1_states_provinces_lines_c0648c73_0a6c_4f4b_8ea4_a2d7b7261c48</Layer>
+   <Layer source="/Users/greg/work/workspace/spHomogeneity/data/final_data/data4figures/ne_50m_admin_0_countries.shp" name="ne_50m_admin_0_countries" provider="ogr">ne_50m_admin_0_countries_3f33b3c7_ed4e_467a_927b_9a6aca14a241</Layer>
+   <Layer source="/Users/greg/work/workspace/spHomogeneity/data/final_data/data4figures/TCI_NDVI_2019_BoliviaMatoGrosso_WGS84.tif" name="TCI_NDVI_2019_BoliviaMatoGrosso_WGS84" provider="gdal">TCI_NDVI_2019_BoliviaMatoGrosso_WGS84_52371265_3169_493f_8bd1_bcc4466598e4</Layer>
+  </LayerSet>
+  <ComposerMapOverview centered="0" blendMode="0" uuid="{7e8e010a-345e-4489-9004-0bb888b8aac4}" show="1" position="3" frameMap="{fa3507ac-7bd8-42fe-9f82-fa816125d857}" name="Overview 1" inverted="0">
+   <symbol type="fill" force_rhr="0" clip_to_extent="1" name="" alpha="1">
+    <layer pass="0" class="SimpleLine" enabled="1" locked="0">
+     <prop k="capstyle" v="square"/>
+     <prop k="customdash" v="5;2"/>
+     <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+     <prop k="customdash_unit" v="Point"/>
+     <prop k="draw_inside_polygon" v="0"/>
+     <prop k="joinstyle" v="bevel"/>
+     <prop k="line_color" v="1,230,255,255"/>
+     <prop k="line_style" v="solid"/>
+     <prop k="line_width" v="0.96"/>
+     <prop k="line_width_unit" v="Point"/>
+     <prop k="offset" v="0"/>
+     <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+     <prop k="offset_unit" v="Point"/>
+     <prop k="ring_filter" v="0"/>
+     <prop k="use_custom_dash" v="0"/>
+     <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+     <data_defined_properties>
+      <Option type="Map">
+       <Option type="QString" value="" name="name"/>
+       <Option name="properties"/>
+       <Option type="QString" value="collection" name="type"/>
+      </Option>
+     </data_defined_properties>
+    </layer>
+   </symbol>
+   <LayoutObject>
+    <dataDefinedProperties>
+     <Option type="Map">
+      <Option type="QString" value="" name="name"/>
+      <Option name="properties"/>
+      <Option type="QString" value="collection" name="type"/>
+     </Option>
+    </dataDefinedProperties>
+    <customproperties/>
+   </LayoutObject>
+  </ComposerMapOverview>
+  <AtlasMap margin="0.10000000000000001" scalingMode="2" atlasDriven="0"/>
+  <labelBlockingItems/>
+ </LayoutItem>
+ <LayoutItem id="" referencePoint="0" background="true" followPresetName="" type="65639" mapFlags="0" labelMargin="0,mm" drawCanvasItems="false" positionLock="false" zValue="1" outlineWidthM="0.3,mm" groupUuid="" positionOnPage="0,0,mm" isTemporal="0" blendMode="0" excludeFromExports="0" followPreset="false" visibility="1" frameJoinStyle="miter" itemRotation="0" uuid="{1c2f54fe-188b-4464-a7ef-3b803102c47b}" templateUuid="{1c2f54fe-188b-4464-a7ef-3b803102c47b}" keepLayerSet="true" size="185,85,mm" frame="true" position="0,0,mm" opacity="1" mapRotation="0">
+  <FrameColor green="0" blue="0" red="0" alpha="255"/>
+  <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+  <Extent xmax="179.668395548117104" ymax="87.63981767802022205" ymin="-77.58025389890087808" xmin="-179.92823082518177102"/>
+  <crs>
+   <spatialrefsys>
+    <wkt>GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]</wkt>
+    <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+    <srsid>3452</srsid>
+    <srid>4326</srid>
+    <authid>EPSG:4326</authid>
+    <description>WGS 84</description>
+    <projectionacronym>longlat</projectionacronym>
+    <ellipsoidacronym>WGS84</ellipsoidacronym>
+    <geographicflag>true</geographicflag>
+   </spatialrefsys>
+  </crs>
+  <LayerSet>
+   <Layer source="/Users/greg/work/workspace/spHomogeneity/data/final_data/data4figures/TCI_NDVI_2019_Global_WGS84.tif" name="TCI_NDVI_2019_Global_WGS84" provider="gdal">global_TCI_NDVI_2019_WGS84_94d76f68_7ecc_4b2b_82a9_e234945c051d</Layer>
+  </LayerSet>
+  <ComposerMapOverview centered="0" blendMode="0" uuid="{01539ac5-a2d0-41ca-b3ad-0f30736a90e2}" show="1" position="3" frameMap="{94537a18-378d-42af-bd22-8ae33d408813}" name="Overview 1" inverted="0">
+   <symbol type="fill" force_rhr="0" clip_to_extent="1" name="" alpha="1">
+    <layer pass="0" class="SimpleLine" enabled="1" locked="0">
+     <prop k="capstyle" v="square"/>
+     <prop k="customdash" v="5;2"/>
+     <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+     <prop k="customdash_unit" v="Point"/>
+     <prop k="draw_inside_polygon" v="0"/>
+     <prop k="joinstyle" v="bevel"/>
+     <prop k="line_color" v="1,230,255,255"/>
+     <prop k="line_style" v="solid"/>
+     <prop k="line_width" v="0.96"/>
+     <prop k="line_width_unit" v="Point"/>
+     <prop k="offset" v="0"/>
+     <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+     <prop k="offset_unit" v="Point"/>
+     <prop k="ring_filter" v="0"/>
+     <prop k="use_custom_dash" v="0"/>
+     <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+     <data_defined_properties>
+      <Option type="Map">
+       <Option type="QString" value="" name="name"/>
+       <Option name="properties"/>
+       <Option type="QString" value="collection" name="type"/>
+      </Option>
+     </data_defined_properties>
+    </layer>
+   </symbol>
+   <LayoutObject>
+    <dataDefinedProperties>
+     <Option type="Map">
+      <Option type="QString" value="" name="name"/>
+      <Option name="properties"/>
+      <Option type="QString" value="collection" name="type"/>
+     </Option>
+    </dataDefinedProperties>
+    <customproperties/>
+   </LayoutObject>
+  </ComposerMapOverview>
+  <AtlasMap margin="0.10000000000000001" scalingMode="2" atlasDriven="0"/>
+  <labelBlockingItems/>
+ </LayoutItem>
+ <customproperties>
+  <property key="atlasRasterFormat" value="png"/>
+  <property key="forceVector" value="0"/>
+  <property key="imageAntialias" value="true"/>
+  <property key="imageCropMarginBottom" value="0"/>
+  <property key="imageCropMarginLeft" value="0"/>
+  <property key="imageCropMarginRight" value="0"/>
+  <property key="imageCropMarginTop" value="0"/>
+  <property key="imageCropToContents" value="false"/>
+  <property key="pdfAppendGeoreference" value="1"/>
+  <property key="pdfCreateGeoPdf" value="0"/>
+  <property key="pdfDisableRasterTiles" value="0"/>
+  <property key="pdfExportThemes" value=""/>
+  <property key="pdfIncludeMetadata" value="1"/>
+  <property key="pdfLayerOrder" value="ne_50m_admin_1_states_provinces_lines_c0648c73_0a6c_4f4b_8ea4_a2d7b7261c48~~~ne_50m_admin_0_countries_3f33b3c7_ed4e_467a_927b_9a6aca14a241~~~TCI_NDVI_2019_BoliviaMatoGrosso_WGS84_52371265_3169_493f_8bd1_bcc4466598e4~~~TCI_NDVI_2019_BoliviaMatoGrosso_a497e8df_5976_407e_b98e_5cbe61bddfac~~~global_TCI_NDVI_2019_WGS84_94d76f68_7ecc_4b2b_82a9_e234945c051d~~~OpenStreetMap_dfe19148_50b5_42c2_ab77_8f34bb3ed166"/>
+  <property key="pdfOgcBestPracticeFormat" value="0"/>
+  <property key="pdfSimplify" value="1"/>
+  <property key="pdfTextFormat" value="0"/>
+  <property key="variableNames"/>
+  <property key="variableValues"/>
+ </customproperties>
+ <Atlas hideCoverage="0" filterFeatures="0" coverageLayerName="ne_50m_admin_0_countries" pageNameExpression="" filenamePattern="'output_'||@atlas_featurenumber" coverageLayerProvider="ogr" enabled="0" sortFeatures="0" coverageLayer="ne_50m_admin_0_countries_3f33b3c7_ed4e_467a_927b_9a6aca14a241" coverageLayerSource="/Users/greg/work/workspace/spHomogeneity/data/final_data/data4figures/ne_50m_admin_0_countries.shp"/>
+</Layout>

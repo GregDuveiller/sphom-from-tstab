@@ -25,6 +25,8 @@ dpath <- 'data/final_data/data4figures'
 col.1 <- '#1770DC'
 col.2 <- '#DCA416'
 
+# set TCI color range
+TCI.range <- c(0.2, 0.8)
 
 
 # function to get a gg plot object
@@ -154,7 +156,7 @@ iPix2Sel <- c(lon = 8.231, lat = 45.195) %>%
   bind_rows(c(lon = 8.27,  lat = 45.18))
 
 # get GGPLOT object
-g <- get_ggTCI_fig('vercelli_2018', c(0.2, 0.7), iPix2Sel, c(0, 1))
+g <- get_ggTCI_fig('vercelli_2018', TCI.range, iPix2Sel, c(0, 1))
 
 # export figure
 fig.name <- paste0('fig___', 'local-TCI-main', '.', fig.fmt)
@@ -171,7 +173,7 @@ iPix2Sel <- c(lon = 105.09,  lat = 13.23) %>%
   bind_rows(c(lon = 105.07,  lat = 13.212))
 
 # get GGPLOT object
-g <- get_ggTCI_fig('rovieng_2019', c(0.2, 0.7), iPix2Sel, c(0, 1))
+g <- get_ggTCI_fig('rovieng_2019', TCI.range, iPix2Sel, c(0, 1))
 
 # export figure
 fig.name <- paste0('fig___', 'local-TCI-defor1', '.', fig.fmt)
@@ -205,7 +207,7 @@ iPix2Sel <- c(lon = -60.635, lat = -11.52) %>%
   bind_rows(c(lon = -60.595, lat = -11.48))
 
 # get GGPLOT object
-g <- get_ggTCI_fig('rondonia_2019', c(0.2, 0.7), iPix2Sel, c(0, 1))
+g <- get_ggTCI_fig('rondonia_2019', TCI.range, iPix2Sel, c(0, 1))
 
 # export figure
 fig.name <- paste0('fig___', 'local-TCI-defor2', '.', fig.fmt)

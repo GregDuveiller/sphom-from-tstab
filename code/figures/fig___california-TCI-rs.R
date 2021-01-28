@@ -24,9 +24,10 @@ load('data/final_data/data4figures/df_TCI.RData')
 load('data/final_data/data4figures/df_CDL.RData')
 
 
-# set-up colorbar
-TCI.range <- c(0.1, 0.9)
+# set-up colorbar if needed
+TCI.range <- c(0.2, 0.8)
 
+# ggplot pf the TCI for the time series
 g.TCI <- ggplot(df_TCI,  aes(x = x, y = y)) +
   geom_raster(aes(fill = TCI)) +
   facet_grid(.~year) + 
@@ -40,18 +41,21 @@ g.TCI <- ggplot(df_TCI,  aes(x = x, y = y)) +
         legend.key.width = unit(2.4, "cm")) +
   guides(fill = guide_colourbar(title.position = "top", title.hjust = 0.5))
 
-
+# get colour names
 cols <- lgd_sub$colors
 names(cols) <- lgd_sub$className
 
+# get top 15 most frequent classes
 freq <- lgd_sub$freq
 names(freq) <- lgd_sub$className
 most_freq <- names(tail(sort(freq), 15))
 
+# add this info to the CDL dataframe
 df_CDL <- df_CDL %>%
   mutate(classID = factor(CDL)) %>% 
   left_join(lgd_sub %>% dplyr::select(classID, className), by = 'classID')
 
+# ggplot plot of CDL 
 g.CDL <- ggplot(df_CDL, aes(x = x, y = y)) +
   geom_raster(aes(fill = className)) +
   facet_grid(.~year) + 

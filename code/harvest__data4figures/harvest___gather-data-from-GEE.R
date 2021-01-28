@@ -29,17 +29,15 @@ for(zone_name in zone_names){
 
 
 
-
-
 file.copy(from = paste0(gee_export_path, '/TCI_ts_NDVI_California_WGS84.tif'),
           to = 'data/inter_data/from_GEE/', 
           recursive = T, copy.date = T, overwrite = T)
 
-file.copy(from = paste0(gee_export_path, '/TCI_NDVI_2019_BoliviaMatoGrosso_WGS84.tif'),
+file.copy(from = paste0(gee_export_path, '/TCI_NDVI_2020_BoliviaMatoGrosso_WGS84.tif'),
           to = 'data/final_data/data4figures', 
           recursive = T, copy.date = T, overwrite = T)
 
-file.copy(from = paste0(gee_export_path, '/TCI_NDVI_2019_Global_WGS84.tif'),
+file.copy(from = paste0(gee_export_path, '/TCI_NDVI_2020_Global_WGS84.tif'),
           to = 'data/final_data/data4figures', 
           recursive = T, copy.date = T, overwrite = T)
 
