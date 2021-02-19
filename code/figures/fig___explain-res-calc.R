@@ -23,11 +23,11 @@ ux <- 0.2
 
 lbl.c.1 <- 'cornflowerblue'
 lbl.y.1 <- df$y[5] + 8*uy
-lbl.x.1 <- df$doy[4] + 7*ux
+lbl.x.1 <- df$doy[4] + 8*ux
 
 lbl.c.2 <- 'blue'
 lbl.y.2 <- df$y[5] + 4*uy
-lbl.x.2 <- df$doy[4] + 7*ux
+lbl.x.2 <- df$doy[4] + 8*ux
 
 lbl.c.3 <- 'orange'
 lbl.y.3 <- df$y[4] + 4*uy
@@ -58,7 +58,7 @@ lbl.x.5 <- df$doy[5] - 2*ux
     annotate('linerange', x = df$doy[4], ymin = lbl.y.2, ymax = df$y[4], linetype = 'dotted', colour = lbl.c.1) +
     annotate("errorbar", ymin = df$y[4], ymax = df$y[5], x = lbl.x.3, colour = lbl.c.3, width = 0.3) +
     annotate('text', label = 'Delta[1] (y)', parse = TRUE, size = 6,
-             y = lbl.y.3, x = lbl.x.3 - 4*ux, colour = lbl.c.3, angle = 0) + 
+             y = lbl.y.3, x = lbl.x.3 - 5*ux, colour = lbl.c.3, angle = 0) + 
     annotate('linerange', y = df$y[5], xmin = lbl.x.3, xmax = df$doy[5], linetype = 'dotted', colour = lbl.c.3) +
     annotate('linerange', y = df$y[4], xmin = lbl.x.3, xmax = df$doy[4], linetype = 'dotted', colour = lbl.c.3) +
     annotate("errorbar", ymin = df$y[4], ymax = df$y[6], x = lbl.x.4, colour = lbl.c.4, width = 0.3) +
@@ -69,10 +69,10 @@ lbl.x.5 <- df$doy[5] - 2*ux
     annotate('segment', x = df$doy[5], xend = df$doy[5], 
              y = df$y[5] + yr5, yend = df$y[5], 
              colour = lbl.c.5, size = 1) +
-    annotate('text', label = 'y[r]', parse = TRUE, size = 6,
+    annotate('text', label = 'r', parse = TRUE, size = 6,
              y = lbl.y.5, x = lbl.x.5,  colour = lbl.c.5) +
     geom_point(aes(x = doy, y = y), size = 3) +
-    annotate('text', label = 'y[r] == frac(Delta[2] (y), Delta[2] (DOY)) %.% Delta[1] (DOY) - Delta[1] (y)', parse = TRUE, size = 6,
+    annotate('text', label = 'r == frac(Delta[2] (y), Delta[2] (DOY)) %.% Delta[1] (DOY) - Delta[1] (y)', parse = TRUE, size = 6,
              y = 0.33, x = 111,  colour = lbl.c.5) +
     scale_y_continuous('y') +
     scale_x_continuous('Day of Year (DOY)') +  
@@ -88,4 +88,5 @@ dir.create(path = fig.path, recursive = T, showWarnings = F)
 # export figure
 fig.name <- paste0('fig___', 'explain-res-calc', '.', fig.fmt)
 ggsave(fig.name, plot = g, path = fig.path, device = fig.fmt, 
-       width = 8, height = 6)
+       width = 6, height = 5)
+ 
