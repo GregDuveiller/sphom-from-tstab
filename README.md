@@ -1,6 +1,6 @@
-# sphomogeneity
+# sphom-from-tstab
 
-This repository includes R code associated with the following article (in press):
+The name of this repository is an abbreviation of *spatial homogeneity from temporal stability*. This repository contains code to create and analyse an index called the TCI (temporal consistency index) that can be extracted from satellite remote sensing time series of the MODIS instrument. All details are availabled in the following article (in press):
 
 **Duveiller G., Camp-Valls G., Ceccherini G. and Cescatti A.** 2021. Spatial homogeneity from temporal stability: exploiting the combined hyper-frequent revisit of Terra and Aqua to guide Earth System Science.  _Remote Sensing of Environment_. 
 
